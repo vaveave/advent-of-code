@@ -23,7 +23,7 @@ if __name__ == "__main__":
     script_dir = Path(__file__).parent
 
     # Read input data from the corresponding file in the script directory
-    input_file = script_dir / f"day_{day}.txt"
+    input_file = script_dir / f"day_{day}_input.txt"
     with open(input_file) as f:
         data = f.read().strip()
 
