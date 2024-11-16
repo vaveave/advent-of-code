@@ -1,8 +1,5 @@
-# Advent of Code: Year 2016, Day 01
-# Usage: python 2016/day_01.py
-
-from pathlib import Path
 import numpy as np
+from pathlib import Path
 
 rotate_right = np.array([[0, 1], [-1, 0]])
 rotate_left = np.array([[0, -1], [1, 0]])

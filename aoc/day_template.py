@@ -1,6 +1,3 @@
-# Advent of Code: Year {{year}}, Day {{day}}
-# Usage: python {{year}}/day_{{day}}.py
-
 from pathlib import Path
 
 

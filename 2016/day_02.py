@@ -1,5 +1,5 @@
-from pathlib import Path
 import numpy as np
+from pathlib import Path
 
 # Keypad and movement mapping
 keypad1 = np.array([
