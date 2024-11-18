@@ -3,38 +3,40 @@ from pathlib import Path
 
 
 def part1(input_data):
-    max_iter = 1e10
+    print("Running part 1...")
     index = 0
     password = ""
-    while (len(password) <= 7) and (index <= max_iter):
+    while (len(password) <= 7):
         door_id_plus_index = input_data + str(index)
         md5_hash = hashlib.md5(door_id_plus_index.encode()).hexdigest()
         if md5_hash[:5] == "00000":
             password += md5_hash[5]
         index += 1
-    if len(password) <= 7:
-        return f"password not found after {str(index)} iterations!"
-    else:
-        return password
+        if index % 1e5 == 0:
+            print(f"Total iterations: {str(index)}")
+    return password
 
 
 def part2(input_data):
-    max_iter = 1e10
     index = 0
-    password = [""]*8
+    password = ["_"]*8
     len_password = 0
-    while (len_password <= 7) and (index <= max_iter):
+    while (len_password <= 7):
         door_id_plus_index = input_data + str(index)
         md5_hash = hashlib.md5(door_id_plus_index.encode()).hexdigest()
         if md5_hash[:5] == "00000":
+            print(f"New possible hash: {md5_hash}")
             ind = md5_hash[5]
             possible_char = md5_hash[6]
-            if ind in "01234567" and password[int(ind)] == "":
-                password[int(ind)] = possible_char
-                len_password += 1
-            print(md5_hash)
-            print(password)
-            print(len_password)
+            if ind.isdigit():
+                if  int(ind) <= 7 and password[int(ind)] == "_":
+                    password[int(ind)] = possible_char
+                    len_password += 1
+                    print(f"Hash is valid! Updated password: {''.join(password)}")
+                else:
+                    print("Hash is not valid.")
+            else:
+                print("Hash not valid.")
         index += 1
     if len(password) <= 7:
         return f"password not found after {str(index)} iterations!"
@@ -48,5 +50,5 @@ if __name__ == "__main__":
     with open(input_file) as f:
         data = f.read().strip()
 
-    # print("Part 1:", part1(data))
+    print("Part 1:", part1(data))
     print("Part 2:", part2(data))
