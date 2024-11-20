@@ -1,20 +1,15 @@
-import pandas as pd
 from pathlib import Path
+from collections import Counter
 
 
 def part1(input_data):
-    input_data = [list(row) for row in input_data.splitlines()]
-    message = pd.DataFrame(input_data).mode()
-    return "".join(message.values.tolist()[0])
+    most_common_chr = [Counter(msg).most_common() for msg in zip(*input_data.splitlines())]
+    return "".join(x[0][0] for x in most_common_chr)
 
 
 def part2(input_data):
-    input_data = [list(row) for row in input_data.splitlines()]
-    df_message = pd.DataFrame(input_data)
-    message = []
-    for col in df_message:
-        message.append(df_message[col].value_counts().index[-1])
-    return "".join(message)
+    most_common_chr = [Counter(msg).most_common() for msg in zip(*input_data.splitlines())]
+    return "".join(x[-1][0] for x in most_common_chr)
 
 
 if __name__ == "__main__":
@@ -22,6 +17,6 @@ if __name__ == "__main__":
     input_file = Path(__file__).parent / f"day_06_input.txt"
     with open(input_file) as f:
         data = f.read().strip()
-
+    
     print("Part 1:", part1(data))
     print("Part 2:", part2(data))
