@@ -63,8 +63,7 @@ def initialize_day(year, day):
     download_input(year, day, folder_name)
 
 
-def main():
-    """Parse command-line arguments and initialize the day."""
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Initialize Advent of Code day folder, script, and input.")
     parser.add_argument("year", type=int, help="The year of the Advent of Code challenge.")
     parser.add_argument("day", type=int, help="The day of the Advent of Code challenge (1-25).")
@@ -78,7 +77,3 @@ def main():
         initialize_day(args.year, args.day)
     except Exception as e:
         print(f"Error: {e}")
-
-
-if __name__ == "__main__":
-    main()
