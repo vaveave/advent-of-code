@@ -44,7 +44,7 @@ def initialize_day(year, day):
         day (int): The day of the Advent of Code challenge.
     """
     # Create the day folder
-    folder_name = f"./{year}/{day}"
+    folder_name = f"aoc/{year}/{day}"
     os.makedirs(folder_name, exist_ok=True)
 
     # Create the script file
