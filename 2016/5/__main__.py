@@ -1,10 +1,8 @@
 import hashlib
 from pathlib import Path
-import time
 
 
-def part1(input_data):
-    print("Running part 1...")
+def part_1(input_data):
     index = 0
     password = ""
     while len(password) <= 7:
@@ -17,7 +15,7 @@ def part1(input_data):
     return password
 
 
-def part2(input_data):
+def part_2(input_data):
     index = 0
     password = ["_"] * 8
     len_password = 0
@@ -43,19 +41,8 @@ def part2(input_data):
 
 
 if __name__ == "__main__":
-    # Get the input file path and read the input data
-    input_file = Path(__file__).parent / f"day_05_input.txt"
-    with open(input_file) as f:
-        data = f.read().strip()
+    with (Path(__file__).parent / "input.txt").open("r") as f:
+        data = f.read()
 
-    # Timing part 1
-    start_time = time.time()
-    result_part1 = part1(data)
-    end_time = time.time()
-    print(f"Part 1: {result_part1} (Time taken: {end_time - start_time:.2f} seconds)")
-
-    # Timing part 2
-    start_time = time.time()
-    result_part2 = part2(data)
-    end_time = time.time()
-    print(f"Part 2: {result_part2} (Time taken: {end_time - start_time:.2f} seconds)")
+    print("Part 1:", part_1(data))
+    print("Part 2:", part_2(data))

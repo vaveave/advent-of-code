@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 
 
-def part1(input_data):
+def part_1(input_data):
     shapes = np.array(
         re.findall(r'\d+', input_data), dtype=int
     ).reshape(-1, 3)
@@ -12,7 +12,7 @@ def part1(input_data):
     return str(sum(shapes[:, 0] + shapes[:, 1] > shapes[:, 2]))
 
 
-def part2(input_data):
+def part_2(input_data):
     shapes = np.array(
         re.findall(r'\d+', input_data), dtype=int
     ).reshape(-1, 3)
@@ -22,10 +22,8 @@ def part2(input_data):
 
 
 if __name__ == "__main__":
-    # Get the input file path and read the input data
-    input_file = Path(__file__).parent / f"day_03_input.txt"
-    with open(input_file) as f:
-        data = f.read().strip()
+    with (Path(__file__).parent / "input.txt").open("r") as f:
+        data = f.read()
 
-    print("Part 1:", part1(data))
-    print("Part 2:", part2(data))
+    print("Part 1:", part_1(data))
+    print("Part 2:", part_2(data))

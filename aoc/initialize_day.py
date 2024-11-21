@@ -48,7 +48,7 @@ def initialize_day(year, day):
     os.makedirs(folder_name, exist_ok=True)
 
     # Create the script file
-    script_path = os.path.join(folder_name, "main.py")
+    script_path = os.path.join(folder_name, "__main__.py")
     if not os.path.exists(script_path):
         with open("aoc/day_template.py") as template_file:
             template_content = template_file.read()

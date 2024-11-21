@@ -1,6 +1,7 @@
 import numpy as np
 from pathlib import Path
 
+
 # Keypad and movement mapping
 keypad1 = np.array([
     ["1", "2", "3"],
@@ -22,7 +23,7 @@ map_move = {
 }
 
 
-def part1(input_data):
+def part_1(input_data):
     position = np.array([1, 1])  # Starting position
     bathroom_code = []
 
@@ -34,7 +35,7 @@ def part1(input_data):
     return "".join(bathroom_code)
 
 
-def part2(input_data):
+def part_2(input_data):
     position = np.array([2, 0])  # Starting position
     bathroom_code = []
 
@@ -49,9 +50,8 @@ def part2(input_data):
 
 
 if __name__ == "__main__":
-    input_file = Path(__file__).parent / "day_02_input.txt"
-    with open(input_file) as f:
-        data = f.read().strip()
+    with (Path(__file__).parent / "input.txt").open("r") as f:
+        data = f.read()
 
-    print("Part 1:", part1(data))
-    print("Part 2:", part2(data))
+    print("Part 1:", part_1(data))
+    print("Part 2:", part_2(data))
