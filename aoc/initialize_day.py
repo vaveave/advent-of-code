@@ -1,6 +1,7 @@
+import os
 import requests
 import argparse
-import os
+import shutil
 from pathlib import Path
 
 
@@ -47,13 +48,11 @@ def initialize_day(year, day):
     folder = Path("aoc") / str(year) / str(day)
     folder.mkdir(parents=True, exist_ok=True)
 
-    # Create the script file
+    # Copy the template script to the day folder and rename it
+    template_path = Path("aoc") / "day_template.py"
     script_path = folder / "__main__.py"
     if not script_path.exists():
-        template_path = Path("aoc") / "day_template.py"
-        template_content = template_path.read_text()
-        script_content = template_content.replace("{{year}}", str(year)).replace("{{day}}", f"{day:02}")
-        script_path.write_text(script_content)
+        shutil.copy(template_path, script_path)
         print(f"Script created at {script_path}")
     else:
         print(f"Script already exists at {script_path}")
@@ -62,7 +61,8 @@ def initialize_day(year, day):
     download_input(year, day, folder)
 
 
-if __name__ == "__main__":
+def main():
+    """Parse command-line arguments and initialize the day."""
     parser = argparse.ArgumentParser(description="Initialize Advent of Code day folder, script, and input.")
     parser.add_argument("year", type=int, help="The year of the Advent of Code challenge.")
     parser.add_argument("day", type=int, help="The day of the Advent of Code challenge (1-25).")
@@ -76,3 +76,7 @@ if __name__ == "__main__":
         initialize_day(args.year, args.day)
     except Exception as e:
         print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
