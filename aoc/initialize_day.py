@@ -1,6 +1,7 @@
-import os
 import requests
 import argparse
+import os
+from pathlib import Path
 
 
 def get_session_token():
@@ -15,7 +16,7 @@ def download_input(year, day, folder):
     Args:
         year (int): The year of the Advent of Code challenge.
         day (int): The day of the Advent of Code challenge.
-        folder (str): The folder path where the input file will be saved.
+        folder (Path): The folder path where the input file will be saved.
     """
     url = f"https://adventofcode.com/{year}/day/{day}/input"
     session_token = get_session_token()
@@ -27,9 +28,8 @@ def download_input(year, day, folder):
 
     response = requests.get(url, cookies=cookies, headers=headers)
     if response.status_code == 200:
-        input_path = os.path.join(folder, "input.txt")
-        with open(input_path, "w") as f:
-            f.write(response.text.strip())
+        input_path = folder / "input.txt"
+        input_path.write_text(response.text.strip())
         print(f"Input downloaded to {input_path}")
     else:
         raise RuntimeError(f"Failed to download input. Status code: {response.status_code}")
@@ -44,23 +44,22 @@ def initialize_day(year, day):
         day (int): The day of the Advent of Code challenge.
     """
     # Create the day folder
-    folder_name = f"aoc/{year}/{day}"
-    os.makedirs(folder_name, exist_ok=True)
+    folder = Path("aoc") / str(year) / str(day)
+    folder.mkdir(parents=True, exist_ok=True)
 
     # Create the script file
-    script_path = os.path.join(folder_name, "__main__.py")
-    if not os.path.exists(script_path):
-        with open("aoc/day_template.py") as template_file:
-            template_content = template_file.read()
+    script_path = folder / "__main__.py"
+    if not script_path.exists():
+        template_path = Path("aoc") / "day_template.py"
+        template_content = template_path.read_text()
         script_content = template_content.replace("{{year}}", str(year)).replace("{{day}}", f"{day:02}")
-        with open(script_path, "w") as script_file:
-            script_file.write(script_content)
+        script_path.write_text(script_content)
         print(f"Script created at {script_path}")
     else:
         print(f"Script already exists at {script_path}")
 
     # Download the input file
-    download_input(year, day, folder_name)
+    download_input(year, day, folder)
 
 
 if __name__ == "__main__":
