@@ -19,22 +19,17 @@ def apply_operations(input_data, keypad_shape):
     operations = [parse_operation(line) for line in input_data.splitlines()]
     keypad_matrix = np.zeros(keypad_shape, int)
     for operation in operations:
-        match operation[0]:
+        key, (x, y) = operation
+        match key:
             case 0:
                 # rect
-                keypad_matrix[:operation[1][1], :operation[1][0]] = 1
+                keypad_matrix[:y, :x] = 1
             case 1:
                 # roll row
-                keypad_matrix[operation[1][0], :] = np.roll(
-                    keypad_matrix[operation[1][0], :],
-                    shift=operation[1][1]
-                )
+                keypad_matrix[x, :] = np.roll(keypad_matrix[x, :], shift=y)
             case 2:
                 # roll column
-                keypad_matrix[:, operation[1][0]] = np.roll(
-                    keypad_matrix[:, operation[1][0]],
-                    shift=operation[1][1]
-                )
+                keypad_matrix[:, x] = np.roll(keypad_matrix[:, x], shift=y)
     return keypad_matrix
 
 
