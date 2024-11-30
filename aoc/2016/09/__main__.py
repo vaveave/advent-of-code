@@ -3,19 +3,21 @@ from pathlib import Path
 
 
 def decompress_string(string):
-    decompressed_string = []
-    index = 0
-    while index < len(string):
-        if string[index] != "(":
-            decompressed_string.append(string[index])
-            index += 1
+    decompressed = []
+    i = 0
+    while i < len(string):
+        if string[i] != "(":
+            decompressed.append(string[i])
+            i += 1
         else:
-            if match := re.match(r"\((\d+)x(\d+)\)", string[index:]):
-                x, y = match.groups()
-                index += len(x)+len(y)+3    # add 3 spaces for "(", ")" and "," characters
-                decompressed_string.append(string[index:index+int(x)]*int(y))
-                index += int(x)
-    return "".join(decompressed_string)
+            match = re.match(r"\((\d+)x(\d+)\)", string[i:])
+            if match:
+                length, repeat = map(int, match.groups())
+                marker_length = match.end()
+                i += marker_length
+                decompressed.append(string[i:i+length] * repeat)
+                i += length
+    return "".join(decompressed)
 
 
 def part_1(input_data):
@@ -23,26 +25,27 @@ def part_1(input_data):
 
 
 def part_2(input_data):
-    def decompress_substr(string, multiplier):
-        slide = 0
+    def recursive_decompress(string):
         length = 0
-        while slide < len(string):
-            if string[slide] != "(":
-                slide += 1
+        i = 0
+        while i < len(string):
+            if string[i] != "(":
                 length += 1
+                i += 1
             else:
-                match = re.match(r"\((\d+)x(\d+)\)", string[slide:])
-                x, y = match.groups()
-                sub_ind = len(x)+len(y)+3
-                multiplier *= int(y)
-                sub_string = string[slide+sub_ind:slide+sub_ind+int(x)]
-                slide += sub_ind+int(x)
-                sub_length = decompress_substr(sub_string, multiplier)
-                length += sub_length * int(y)
+                match = re.match(r"\((\d+)x(\d+)\)", string[i:])
+                if match:
+                    marker_length = match.end()
+                    segment_length, repeat = map(int, match.groups())
+                    i += marker_length
+                    subsegment = string[i:i+segment_length]
+                    length += recursive_decompress(subsegment) * repeat
+                    i += segment_length
         return length
-    return decompress_substr(input_data, 1)
+    return recursive_decompress(input_data)
 
 
+# Test cases
 test_data_1 = {
     "ADVENT": "ADVENT",
     "A(1x5)BC": "ABBBBBC",
@@ -60,21 +63,21 @@ test_data_2 = {
 
 
 def test_decompress_string():
-    for key, value in test_data_1.items():
-        assert decompress_string(key) == value
+    for key, expected in test_data_1.items():
+        assert decompress_string(key) == expected
 
 
-def test_iterate_decompression():
-    for key, value in test_data_2.items():
-        assert part_2(key) == value
+def test_recursive_decompression():
+    for key, expected in test_data_2.items():
+        assert part_2(key) == expected
 
 
 if __name__ == "__main__":
     with (Path(__file__).parent / "input.txt").open("r") as f:
-        data = f.read()
+        data = f.read().strip()
 
     test_decompress_string()
-    test_iterate_decompression()
+    test_recursive_decompression()
 
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
