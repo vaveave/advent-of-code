@@ -22,26 +22,25 @@ def part_1(input_data):
     return len(decompress_string(input_data))
 
 
-def iterate_decompression(string, length=0, repeat=1):
-    index = string.find("(")
-    if index == -1:
-        return "", repeat * (length+len(string))
-    elif index != 0:
-        length += index
-        string = string[index:]
-    match = re.match(r"\((\d+)x(\d+)\)", string)
-    x, y = match.groups()
-    sub_ind = len(x)+len(y)+3    # add 3 spaces for "(", ")" and "," characters
-    iterate_decompression(
-        string[sub_ind:sub_ind+int(x)],
-        length=length,
-        repeat=repeat*int(y)
-    )
-
-
-
 def part_2(input_data):
-    return(iterate_decompression(input_data)[1])
+    def decompress_substr(string, multiplier):
+        slide = 0
+        length = 0
+        while slide < len(string):
+            if string[slide] != "(":
+                slide += 1
+                length += 1
+            else:
+                match = re.match(r"\((\d+)x(\d+)\)", string[slide:])
+                x, y = match.groups()
+                sub_ind = len(x)+len(y)+3
+                multiplier *= int(y)
+                sub_string = string[slide+sub_ind:slide+sub_ind+int(x)]
+                slide += sub_ind+int(x)
+                sub_length = decompress_substr(sub_string, multiplier)
+                length += sub_length * int(y)
+        return length
+    return decompress_substr(input_data, 1)
 
 
 test_data_1 = {
@@ -67,7 +66,7 @@ def test_decompress_string():
 
 def test_iterate_decompression():
     for key, value in test_data_2.items():
-        assert iterate_decompression(key)[1] == value
+        assert part_2(key) == value
 
 
 if __name__ == "__main__":
@@ -75,7 +74,7 @@ if __name__ == "__main__":
         data = f.read()
 
     test_decompress_string()
-    # test_iterate_decompression()
+    test_iterate_decompression()
 
     print("Part 1:", part_1(data))
-    print("Part 2:", part_2("X(8x2)(3x3)ABCY"))
+    print("Part 2:", part_2(data))
