@@ -1,13 +1,13 @@
 
 # Advent of Code Solutions
 
-This repository contains solutions to the Advent of Code challenges for each year and day. Each day has a Python script implementing the solution. The input for each day is downloaded automatically using a session token.
+Welcome to my small Advent of Code corner! 🎄🎮 This repository contains my solutions to the Advent of Code challenges, with one Python script for each day of the challenge. The input data for each day is automatically downloaded using a session token, so all you need to do is run the scripts!
 
 ## Setup Instructions
 
-### 1. Set Up the Environment Variable
+### 1. Set Up Your Session Token
 
-Set the `ADVENT_OF_CODE_SESSION_ID` environment variable to authenticate and download the input data.
+To download the input data, you'll need to authenticate by setting the `ADVENT_OF_CODE_SESSION_ID` environment variable.
 
 #### For Windows:
 ```cmd
@@ -19,50 +19,46 @@ setx ADVENT_OF_CODE_SESSION_ID "your_session_token_here"
 export ADVENT_OF_CODE_SESSION_ID="your_session_token_here"
 ```
 
-### 2. Initialize a Day Script (Optional)
+### 2. Set Up the Environment Using `pyproject.toml`
 
-Run the following command to create a new day script for a specific year and day, and download the input data:
+This project uses `pyproject.toml` for managing dependencies and environment setup. To get started, make sure you have **[Poetry](https://python-poetry.org/)** installed, as it helps manage Python packages and virtual environments.
+
+If you don’t have Poetry installed, you can install it by running:
+
+#### For macOS/Linux/Windows:
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+Once Poetry is installed, you can create and activate the virtual environment with the following command:
 
 ```bash
-python aoc/initialize_day.py <year> <day>
+poetry install
 ```
 
-Example:
-```bash
-python aoc/initialize_day.py 2023 01
-```
+This will install all the necessary dependencies defined in `pyproject.toml` and create a virtual environment for you.
 
-This creates the script `2023/day_01.py` and downloads the input file `2023/day_01_input.txt`.
-
-### 3. Run the Solution
-
-To run the solution for a specific day, use:
+To activate the virtual environment, run:
 
 ```bash
-python 2023/day_01.py
+poetry shell
 ```
 
-This will execute the solution for Day 1 of 2023.
+### 3. Run the Solution for Any Day
 
-### 4. Running from PyCharm
+Each day has its own Python script ready to run. Simply use this command to run the solution for a specific day:
 
-In PyCharm, open the desired day's script (`2023/day_01.py`) and click the "Run" or "Debug" button to run the solution directly from the IDE.
-
-## Directory Structure
-
+```bash
+py aoc/2023/1
 ```
-advent-of-code/
-│
-├── 2023/
-│   ├── day_01.py             # Solution for day 1 of 2023
-│   └── day_01_input.txt      # Input data for day 1 of 2023
-│
-├── aoc/
-│   ├── day_template.py       # Template for day solutions
-│   ├── initialize_day.py     # Script to initialize day solutions
-│   ├── utils.py              # Utility functions for downloading input and initializing day scripts
-└── README.md                 # This README file
-```
+
+Just replace `2023/1` with the year and day you want to run (e.g., `2023/2` for Day 2 of 2023).
+
+### 4. Happy Coding!
+
+That’s it! Now you can enjoy solving the puzzles. 🎉 If you want to try a different year or day, just run the corresponding script with `py`.
+
+---
 
 ## License
 
