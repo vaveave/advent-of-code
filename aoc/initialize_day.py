@@ -45,7 +45,7 @@ def initialize_day(year, day):
         day (int): The day of the Advent of Code challenge.
     """
     # Create the day folder
-    folder = Path("aoc") / str(year) / str(day)
+    folder = Path("aoc") / str(year) / str(day).zfill(2)
     folder.mkdir(parents=True, exist_ok=True)
 
     # Copy the template script to the day folder and rename it

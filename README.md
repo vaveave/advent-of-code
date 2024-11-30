@@ -49,10 +49,10 @@ poetry shell
 Each day has its own Python script ready to run. Simply use this command to run the solution for a specific day:
 
 ```bash
-py aoc/2023/1
+py aoc/2023/01
 ```
 
-Just replace `2023/1` with the year and day you want to run (e.g., `2023/2` for Day 2 of 2023).
+Just replace `2023/01` with the year and day you want to run (e.g., `2023/02` for Day 2 of 2023).
 
 ### 4. Happy Coding!
 
