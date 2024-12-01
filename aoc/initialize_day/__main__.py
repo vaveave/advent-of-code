@@ -5,6 +5,10 @@ import shutil
 from pathlib import Path
 
 
+PATH_AOC = Path("./aoc")
+PATH_TEMPLATE = PATH_AOC / Path("initialize_day") / Path("templates")
+
+
 def get_session_token():
     """Retrieve the session token from the environment variable."""
     return os.getenv("ADVENT_OF_CODE_SESSION_ID")
@@ -45,17 +49,28 @@ def initialize_day(year, day):
         day (int): The day of the Advent of Code challenge.
     """
     # Create the day folder
-    folder = Path("aoc") / str(year) / str(day).zfill(2)
+    folder = PATH_AOC / str(year) / str(day).zfill(2)
     folder.mkdir(parents=True, exist_ok=True)
 
-    # Copy the template script to the day folder and rename it
-    template_path = Path("aoc") / "day_template.py"
+    # Copy the templates for the scripts
+    main_template_path = PATH_TEMPLATE / "main_template.py"
+    solution_template_path = PATH_TEMPLATE / "solution_template.py"
+
+    # Create the __main__.py script
     script_path = folder / "__main__.py"
     if not script_path.exists():
-        shutil.copy(template_path, script_path)
+        shutil.copy(main_template_path, script_path)
         print(f"Script created at {script_path}")
     else:
         print(f"Script already exists at {script_path}")
+
+    # Create the solution.py file
+    solution_path = folder / "solution.py"
+    if not solution_path.exists():
+        shutil.copy(solution_template_path, solution_path)
+        print(f"Solution file created at {solution_path}")
+    else:
+        print(f"Solution file already exists at {solution_path}")
 
     # Download the input file
     download_input(year, day, folder)
