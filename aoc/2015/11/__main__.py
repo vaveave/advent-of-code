@@ -6,7 +6,7 @@ alphabet = string.ascii_lowercase
 
 
 def next_char(char):
-    return chr((ord(char) - ord('a') + 1) % 26 + ord('a'))
+    return alphabet[(alphabet.find(char)+1) % 26]
 
 
 def validation_rule_1(psw):
@@ -21,11 +21,12 @@ def validation_rule_2(psw):
 
 
 def validation_rule_3(psw):
-    cnt = 0
+    counter, char = 0, ""
     for i in range(len(psw)-1):
-        if psw[i] == psw[i+1]:
-            cnt += 1
-        if cnt == 2:
+        if (psw[i] == psw[i+1]) & (psw[i] != char):
+            counter += 1
+            char = psw[i]
+        if counter == 2:
             return True
     return False
 
@@ -40,26 +41,29 @@ def test_validate_psw():
     assert not validate_psw("abbcegjk")
 
 
-def increment_psw(psw):
-    for i in range(len(psw)-1, 0, -1):
-        char = psw[i]
+def increment_psw(password):
+    for i in range(len(password) - 1, 0, -1):
+        char = password[i]
         if char != 'z':
-            psw[i] = next_char(char)
-            psw[i+1:-1] = "a" * (len(psw) - i)
+            return password[0:i] + next_char(char) + ("a" * (len(password) - i - 1))
     raise Exception(f"Impossible to increment password")
 
 
-def part_1(input_data):
-    return increment_psw(input_data)
-
-
-def part_2(input_data):
-    pass
+def part_1(password):
+    # Brute force approach to find next valid password
+    valid_password = False
+    while not valid_password:
+        password = increment_psw(password)
+        valid_password = validate_psw(password)
+    return password
 
 
 if __name__ == "__main__":
     with (Path(__file__).parent / "input.txt").open("r") as f:
         data = f.read()
 
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    test_validate_psw()
+
+    next_santa_password = part_1(data)
+    print("Part 1:", next_santa_password)
+    print("Part 2:", part_1(next_santa_password))
