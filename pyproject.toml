@@ -2,7 +2,7 @@
 name = "advent-of-code"
 version = "0.1.0"
 description = ""
-authors = ["Valerio Avenoso <***REMOVED***>"]
+authors = ["Valerio Avenoso"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
