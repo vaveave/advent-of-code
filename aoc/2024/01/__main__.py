@@ -16,14 +16,6 @@ def part_2(location_ids):
     return sum(location * np.count_nonzero(list_2 == location) for location in list_1)
 
 
-test_data = """3   4
-4   3
-2   5
-1   3
-3   9
-3   3"""
-
-
 if __name__ == "__main__":
     with (Path(__file__).parent / "input.txt").open("r") as f:
         data = f.read()
