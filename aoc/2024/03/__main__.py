@@ -1,8 +1,6 @@
 import re
 from pathlib import Path
 
-from aoc.initialize_day import load_input
-
 
 mul_pattern = re.compile(r"mul\((\d+),(\d+)\)")
 do_dont_pattern = re.compile(r"do\(\)+|don't\(\)")
@@ -28,18 +26,18 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-    # Determine the year and day from the folder structure
+
+    from aoc.initialize_day import load_input
+
     folder = Path(__file__).parent
     try:
-        year = int(folder.parts[-2])  # Extract year from folder structure
-        day = int(folder.parts[-1])  # Extract day from folder structure
+        year = int(folder.parts[-2])
+        day = int(folder.parts[-1])
     except ValueError:
         print("Failed to determine year and day from folder structure.")
         raise SystemExit(1)
 
-    # Ensure the input file is available and fetch the data
     data = load_input(year, day)
 
-    # Process the input
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

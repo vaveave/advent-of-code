@@ -45,8 +45,18 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-    with (Path(__file__).parent / "input.txt").open("r") as f:
-        data = f.read()
+    
+    from aoc.initialize_day import load_input
+
+    folder = Path(__file__).parent
+    try:
+        year = int(folder.parts[-2])
+        day = int(folder.parts[-1])
+    except ValueError:
+        print("Failed to determine year and day from folder structure.")
+        raise SystemExit(1)
+
+    data = load_input(year, day)
 
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
