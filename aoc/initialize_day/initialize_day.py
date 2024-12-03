@@ -1,5 +1,6 @@
 import os
 import requests
+import shutil
 from pathlib import Path
 
 
@@ -54,3 +55,37 @@ def load_input(year, day):
             raise  # Re-raise the exception to stop further execution
 
     return input_file.read_text()
+
+
+def initialize_day(year, day):
+    """
+    Initialize the folder, script, input file, and __init__.py for a specific day.
+
+    Args:
+        year (int): The year of the Advent of Code challenge.
+        day (int): The day of the Advent of Code challenge.
+    """
+    # Create the year folder if it doesn't exist, and the __init__.py file
+    year_folder = Path(__file__).parent.parent / str(year)
+    if not year_folder.exists():
+        year_folder.mkdir(parents=True, exist_ok=True)
+        init_file = year_folder / "__init__.py"
+        if not init_file.exists():
+            init_file.touch()  # Create the __init__.py file
+            print(f"Created {init_file}")
+
+    # Create the day folder
+    folder = year_folder / str(day).zfill(2)
+    folder.mkdir(parents=True, exist_ok=True)
+
+    # Copy the template script to the day folder and rename it
+    template_path = Path(__file__).parent.parent / "initialize_day" / "day_template.py"
+    script_path = folder / "__main__.py"
+    if not script_path.exists():
+        shutil.copy(template_path, script_path)
+        print(f"Script created at {script_path}")
+    else:
+        print(f"Script already exists at {script_path}")
+
+    # Download the input file
+    load_input(year, day)
