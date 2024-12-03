@@ -1,6 +1,5 @@
 import os
 import requests
-import shutil
 from pathlib import Path
 
 
@@ -35,26 +34,23 @@ def download_input(year, day, folder):
         raise RuntimeError(f"Failed to download input. Status code: {response.status_code}")
 
 
-def initialize_day(year, day):
+def load_input(year, day):
     """
-    Initialize the folder, script, and input file for a specific day.
+    Ensure the input file exists; if not, download it.
 
     Args:
         year (int): The year of the Advent of Code challenge.
         day (int): The day of the Advent of Code challenge.
     """
-    # Create the day folder
-    folder = Path("aoc") / str(year) / str(day).zfill(2)
-    folder.mkdir(parents=True, exist_ok=True)
+    folder = Path(__file__).parent.parent / str(year) / str(day).zfill(2)
+    input_file = folder / "input.txt"
 
-    # Copy the template script to the day folder and rename it
-    template_path = Path("aoc") / "initialize_day" / "day_template.py"
-    script_path = folder / "__main__.py"
-    if not script_path.exists():
-        shutil.copy(template_path, script_path)
-        print(f"Script created at {script_path}")
-    else:
-        print(f"Script already exists at {script_path}")
+    if not input_file.exists():
+        print(f"Input file not found. Attempting to download for year {year}, day {day}...")
+        try:
+            download_input(year, day, folder)
+        except Exception as e:
+            print(f"Error downloading input: {e}")
+            raise  # Re-raise the exception to stop further execution
 
-    # Download the input file
-    download_input(year, day, folder)
+    return input_file.read_text()
