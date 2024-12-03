@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 mul_pattern = re.compile(r"mul\((\d+),(\d+)\)")
-do_dont_pattern = re.compile(r"do\(\)+|don't\(\)")
+do_dont_pattern = re.compile(r"do\(\)|don't\(\)")
 
 
 def part_1(input_data):
