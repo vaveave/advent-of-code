@@ -1,6 +1,9 @@
 import re
 from pathlib import Path
 
+from aoc.initialize_day import initialize_day
+
+
 mul_pattern = re.compile(r"mul\((\d+),(\d+)\)")
 do_dont_pattern = re.compile(r"do\(\)+|don't\(\)")
 
