@@ -19,7 +19,7 @@ setx ADVENT_OF_CODE_SESSION_ID "your_session_token_here"
 export ADVENT_OF_CODE_SESSION_ID="your_session_token_here"
 ```
 
-### 2. Set Up the Environment Using `pyproject.toml`
+### 2. Set Up the Environment
 
 This project uses `pyproject.toml` for managing dependencies and environment setup. To get started, make sure you have **[Poetry](https://python-poetry.org/)** installed, as it helps manage Python packages and virtual environments.
 
@@ -54,7 +54,30 @@ py -m aoc.2023.01
 
 Just replace `2023.01` with the year and day you want to run (e.g., `2023.01` for Day 2 of 2023).
 
-### 4. Happy Coding!
+### 4. (Optional) Day Initialization
+If you want to create the folder structure and script template for a specific day automatically, you can use the initialize_day utility. 
+
+This will:
+
+- Create the folder for the day.
+- Copy the template script to the folder.
+- Download the input file for the day.
+
+#### How to Initialize a Day
+Run the following command in your terminal:
+
+```bash
+py -m aoc.initialize_day <year> <day>
+```
+Replace `<year>` and `<day>` with the desired year and day. For example, to initialize Day 1 of 2023:
+
+```bash
+py -m aoc.initialize_day 2023 1
+```
+#### What If the Input File Is Missing?
+If the input file for the day is missing when running the script, it will attempt to download it automatically using your session token.
+
+### 5. Happy Coding!
 
 That’s it! Now you can enjoy solving the puzzles. 🎉 If you want to try a different year or day, just run the corresponding script with `py`.
 
