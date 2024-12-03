@@ -1,29 +1,27 @@
 import re
-
 from pathlib import Path
+
+mul_pattern = re.compile(r"mul\((\d+),(\d+)\)")
+do_dont_pattern = re.compile(r"do\(\)+|don't\(\)")
 
 
 def part_1(input_data):
     non_corrupted_pairs = [
-        tuple(map(int, x)) for x in re.findall(r"mul\((\d+),(\d+)\)", input_data)
+        tuple(map(int, x)) for x in mul_pattern.findall(input_data)
     ]
     return sum(x[0]*x[1] for x in non_corrupted_pairs)
 
 
 def part_2(input_data):
-    remaining_string = input_data
-    indexes = [remaining_string.find("do()"), remaining_string.find("don't()")]
-    result = part_1(input_data[:(min(indexes))])
-    while True:
-        indexes = [remaining_string.find("do()"), remaining_string.find("don't()")]
-        if all(ind==-1 for ind in indexes):
-            return result
-        indexes.sort()
-        if indexes[0] == -1:
-            indexes = [indexes[1], len(remaining_string)]
-        if not remaining_string[indexes[0]:].startswith("don't()"):
-            result += part_1(remaining_string[indexes[0]:indexes[1]])
-        remaining_string = remaining_string[indexes[1]:]
+    boundaries = [match.start() for match in do_dont_pattern.finditer(input_data)]
+    boundaries = [0] + boundaries + [len(input_data)]
+    total = 0
+    for i in range(len(boundaries)-1):
+        segment = input_data[boundaries[i]:boundaries[i + 1]]
+        if segment.startswith("don't"):
+            continue
+        total += part_1(segment)
+    return total
 
 
 if __name__ == "__main__":
