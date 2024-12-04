@@ -61,7 +61,7 @@ if __name__ == "__main__":
         print("Failed to determine year and day from folder structure.")
         raise SystemExit(1)
 
-    data = read_input(load_input(year, day))
+    data = load_input(year, day)
 
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
