@@ -1,5 +1,4 @@
 import re
-from pathlib import Path
 
 
 def decompress_string(string):
@@ -73,8 +72,9 @@ def test_recursive_decompression():
 
 
 if __name__ == "__main__":
-    with (Path(__file__).parent / "input.txt").open("r") as f:
-        data = f.read().strip()
+
+    from aoc.initialize_day import load_input
+    data = load_input(__file__)
 
     test_decompress_string()
     test_recursive_decompression()
