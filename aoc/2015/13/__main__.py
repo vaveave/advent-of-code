@@ -42,7 +42,7 @@ def part_1(input_data, neutral_guest=False):
         input_data.update({("Guest", a): 0 for a in attendees})
         input_data.update({(a, "Guest"): 0 for a in attendees})
         attendees.add("Guest")
-    combinations = {AttendeeCombination(k, input_data) for k in list(itertools.permutations(attendees))}
+    combinations = {AttendeesCombination(k, input_data) for k in list(itertools.permutations(attendees))}
     return max([combo.compute_score() for combo in combinations])
 
 
