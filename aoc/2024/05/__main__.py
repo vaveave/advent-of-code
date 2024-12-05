@@ -17,15 +17,17 @@ def is_update_valid(update, rules):
 
 def part_1(input_data):
     sum_central_pages = 0
+    valid_updates, invalid_updates = [], []
     for update in input_data["updates"]:
         if is_update_valid(update, input_data["rules"]):
+            valid_updates.append(update)
             sum_central_pages += update[len(update) // 2]
-    return sum_central_pages
+        else:
+            invalid_updates.append(update)
+    return sum_central_pages, valid_updates, invalid_updates
 
 
-def part_2(input_data):
-    rules = input_data["rules"]
-    sum_central_pages = 0
+def part_2(rules, invalid_updates):
 
     class Page:
         def __init__(self, x: int):
@@ -36,17 +38,18 @@ def part_2(input_data):
                 return True
             return False
 
-    for update in input_data["updates"]:
-        if not is_update_valid(update, input_data["rules"]):
-            update_new = [Page(i) for i in update]
-            update_new.sort()
-            sum_central_pages += update_new[len(update) // 2].value
+    sum_central_pages = 0
+    for update in invalid_updates:
+        update_new = [Page(i) for i in update]
+        update_new.sort()
+        sum_central_pages += update_new[len(update) // 2].value
     return sum_central_pages
 
 
 if __name__ == "__main__":
 
     from aoc.initialize_day import load_input
-    data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data)))
-    print("Part 2:", part_2(read_input(data)))
+    data = read_input(load_input(__file__))
+    result, _, invalid_upd = part_1(data)
+    print("Part 1:", result)
+    print("Part 2:", part_2(data["rules"], invalid_upd))
