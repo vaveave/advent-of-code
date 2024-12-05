@@ -35,20 +35,21 @@ def download_input(year, day, folder):
         raise RuntimeError(f"Failed to download input. Status code: {response.status_code}")
 
 
-def load_input(year, day):
+def load_input(path: str | Path):
     """
     Ensure the input file exists; if not, download it.
 
     Args:
-        year (int): The year of the Advent of Code challenge.
-        day (int): The day of the Advent of Code challenge.
+        path (str | Path): Path of the daily script where to save the file.
     """
-    folder = Path(__file__).parent.parent / str(year) / str(day).zfill(2)
+    folder = Path(path).parent
     input_file = folder / "input.txt"
 
     if not input_file.exists():
-        print(f"Input file not found. Attempting to download for year {year}, day {day}...")
         try:
+            year = int(folder.parts[-2])
+            day = int(folder.parts[-1])
+            print(f"Input file not found. Attempting to download for year {year}, day {day}...")
             download_input(year, day, folder)
         except Exception as e:
             print(f"Error downloading input: {e}")
@@ -88,4 +89,4 @@ def initialize_day(year, day):
         print(f"Script already exists at {script_path}")
 
     # Download the input file
-    load_input(year, day)
+    load_input(script_path)
