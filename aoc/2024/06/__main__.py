@@ -1,12 +1,18 @@
 import numpy as np
 
+directions = [
+    (-1, 0),
+    (0, 1),
+    (1, 0),
+    (0, -1)
+]
+
 map_to_directions = {
-    "^": (-1, 0),
-    ">": (0, 1),
-    "v": (1, 0),
-    "<": (0, -1)
+    "^": 0,
+    ">": 1,
+    "v": 2,
+    "<": 3
 }
-map_to_symbols = {tuple(value): key for key, value in map_to_directions.items()}
 char_to_bool = {'.': True, '^': True, '>': True, 'v': True, '<': True, '#': False}
 
 rotate = {
@@ -17,87 +23,126 @@ rotate = {
 }
 
 
-class InfiniteLoop(Exception):
-    pass
-
-
 def read_input(input_data):
     return np.array([list(row) for row in input_data.splitlines()])
 
 
-def next_position_direction(grid, position, direction):
-    pos_x, pos_y = position
-    dir_x, dir_y = direction
-
-    while not grid[pos_x + dir_x, pos_y + dir_y]:
-        dir_x, dir_y = rotate[(dir_x, dir_y)]  # Assuming `rotate` is a dictionary.
-
-    new_position = (pos_x + dir_x, pos_y + dir_y)
-    new_direction = (dir_x, dir_y)
-    return new_position, new_direction
+class InfiniteLoop(Exception):
+    pass
 
 
-def is_bound_reached(next_position):
-    is_outside = any([
-        (next_position[0] == 0),
-        (next_position[0] == grid_size_0),
-        (next_position[1] == 0),
-        (next_position[1] == grid_size_1)
-    ])
-    return is_outside
+class Tour:
+    def __init__(
+            self,
+            grid,
+            start_position,
+            start_direction,
+            past_locations=None,
+            past_rotations=None
+    ):
+        self.grid = grid
+        self.grid_shape = grid.shape
+        self.position = start_position
+        self.direction = start_direction
 
+        # Initialize past_locations and past_rotations if not provided
+        if past_locations is None:
+            self.past_locations = np.zeros((grid.shape[0], grid.shape[1]), dtype=bool)
+        else:
+            self.past_locations = past_locations
 
-def follow_path(grid, hist_steps):
-    hist_steps = hist_steps.copy()
-    curr_position, curr_direction = hist_steps[-1]
-    while not is_bound_reached(curr_position):
-        next_step = next_position_direction(grid, curr_position, curr_direction)
-        if next_step in set(hist_steps):
+        if past_rotations is None:
+            self.past_rotations = np.zeros((grid.shape[0], grid.shape[1], 4), dtype=bool)
+        else:
+            self.past_rotations = past_rotations
+
+    def mark_position(self):
+        """Mark the current position and direction in the past history."""
+        self.past_locations[self.position] = True  # Mark position as visited
+        self.past_rotations[self.position + (self.direction,)] = True  # Mark direction as visited
+
+    def move(self):
+        """Move in the current direction if possible."""
+        pos_x, pos_y = self.position
+        dir_x, dir_y = directions[self.direction]
+
+        # Rotate if the next cell is not traversable
+        while not self.grid[pos_x + dir_x, pos_y + dir_y]:
+            self.rotate()
+            dir_x, dir_y = directions[self.direction]
+
+        # Update position
+        self.position = (pos_x + dir_x, pos_y + dir_y)
+
+    def rotate(self):
+        """Rotate the direction clockwise."""
+        self.direction = (self.direction + 1) % 4
+
+    def is_border_reached(self):
+        """Check if the next move would leave the grid."""
+        pos_x, pos_y = self.position
+        dir_x, dir_y = directions[self.direction]
+        next_pos_x, next_pos_y = pos_x + dir_x, pos_y + dir_y
+        return next_pos_x < 0 or next_pos_x >= self.grid_shape[0] or next_pos_y < 0 or next_pos_y >= self.grid_shape[1]
+
+    def check_infinite_loop(self):
+        """Check if the current position and direction form an infinite loop."""
+        pos_x, pos_y = self.position
+        if self.past_locations[pos_x, pos_y] and self.past_rotations[self.position + (self.direction,)]:
             raise InfiniteLoop
-        curr_position, curr_direction = next_step
-        # grid[curr_position] = map_to_symbols[curr_direction]  # to be removed
-        hist_steps.append(next_step)
-    return len(set(pos for pos, _ in hist_steps))
+
+    def follow_path(self):
+        """Follow the path until a border is reached or a loop is detected."""
+        while not self.is_border_reached():
+            self.check_infinite_loop()
+            self.mark_position()
+            self.move()
+        self.mark_position()
+        return np.sum(self.past_locations)  # Count unique positions visited
 
 
 def part_1(input_data):
     start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
-    start_position = tuple(p[0] for p in start_position)
+    start_position = tuple(p.astype(np.int32)[0] for p in start_position)
     start_direction = map_to_directions[input_data[start_position]]
     grid = np.vectorize(char_to_bool.get)(input_data)
-    return follow_path(grid, [(start_position, start_direction)])
 
-
-def try_path(grid, hist_steps):
-    try:
-        follow_path(grid, hist_steps)
-        return False
-    except InfiniteLoop:
-        return True
-
-
-def follow_what_if_path(grid, hist_steps):
-    curr_position, curr_direction = hist_steps[-1]
-    obstacles_counter = 0
-    while not is_bound_reached(curr_position):
-        next_step = next_position_direction(grid, curr_position, curr_direction)
-        # grid[next_step[0]] = "0"
-        grid_to_be_tested = grid.copy()
-        grid_to_be_tested[next_step[0]] = False
-        if try_path(grid_to_be_tested, hist_steps):
-            obstacles_counter += 1
-        curr_position, curr_direction = next_step
-        # grid[curr_position] = map_to_symbols[curr_direction]  # to be removed
-        hist_steps.append(next_step)
-    return obstacles_counter
+    tour = Tour(grid, start_position, start_direction)
+    return tour.follow_path()
 
 
 def part_2(input_data):
     start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
-    start_position = tuple(p[0] for p in start_position)
+    start_position = tuple(p.astype(np.int32)[0] for p in start_position)
     start_direction = map_to_directions[input_data[start_position]]
     grid = np.vectorize(char_to_bool.get)(input_data)
-    return follow_what_if_path(grid, [(start_position, start_direction)])
+
+    obstacles_counter = 0
+    original_tour = Tour(grid, start_position, start_direction)
+
+    # Iterate through all possible steps
+    while not original_tour.is_border_reached():
+        dir_x, dir_y = directions[original_tour.direction]
+        next_position = (original_tour.position[0] + dir_x,
+                         original_tour.position[1] + dir_y)
+
+        # Simulate adding an obstacle
+        grid_with_obstacle = grid.copy()
+        grid_with_obstacle[next_position] = False
+
+        # Test if the modified grid causes an infinite loop
+        try:
+            tour = Tour(grid_with_obstacle, start_position, start_direction,
+                        original_tour.past_locations.copy(),
+                        original_tour.past_rotations.copy())
+            tour.follow_path()
+        except InfiniteLoop:
+            obstacles_counter += 1
+
+        # Move to the next step in the original tour
+        original_tour.move()
+
+    return obstacles_counter
 
 
 test_data = """....#.....
@@ -113,11 +158,8 @@ test_data = """....#.....
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    grid_ = read_input(data)
-    grid_size_0 = grid_.shape[0]-1
-    grid_size_1 = grid_.shape[1]-1
+    grid_ = read_input(test_data)
     print("Part 1:", part_1(grid_))
     print("Part 2:", part_2(grid_))
