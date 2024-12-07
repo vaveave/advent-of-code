@@ -106,7 +106,6 @@ def part_1(input_data):
     start_position = tuple(p.astype(np.int32)[0] for p in start_position)
     start_direction = map_to_directions[input_data[start_position]]
     grid = np.vectorize(char_to_bool.get)(input_data)
-
     tour = Tour(grid, start_position, start_direction)
     return tour.follow_path()
 
@@ -117,7 +116,7 @@ def part_2(input_data):
     start_direction = map_to_directions[input_data[start_position]]
     grid = np.vectorize(char_to_bool.get)(input_data)
 
-    obstacles_counter = 0
+    obstacles = []
     original_tour = Tour(grid, start_position, start_direction)
 
     # Iterate through all possible steps
@@ -126,23 +125,26 @@ def part_2(input_data):
         next_position = (original_tour.position[0] + dir_x,
                          original_tour.position[1] + dir_y)
 
-        # Simulate adding an obstacle
-        grid_with_obstacle = grid.copy()
-        grid_with_obstacle[next_position] = False
+        if grid[next_position]:
+            # Simulate adding an obstacle
+            grid[next_position] = False
 
-        # Test if the modified grid causes an infinite loop
-        try:
-            tour = Tour(grid_with_obstacle, start_position, start_direction,
-                        original_tour.past_locations.copy(),
-                        original_tour.past_rotations.copy())
-            tour.follow_path()
-        except InfiniteLoop:
-            obstacles_counter += 1
+            # Test if the modified grid causes an infinite loop
+            try:
+                tour = Tour(grid,
+                            start_position,
+                            start_direction)
+                tour.follow_path()
+            except InfiniteLoop:
+                obstacles.append(next_position)
+
+            # Remove fake obstacle
+            grid[next_position] = True
 
         # Move to the next step in the original tour
         original_tour.move()
 
-    return obstacles_counter
+    return len(set(obstacles))
 
 
 test_data = """....#.....
@@ -160,6 +162,6 @@ test_data = """....#.....
 if __name__ == "__main__":
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    grid_ = read_input(test_data)
+    grid_ = read_input(data)
     print("Part 1:", part_1(grid_))
     print("Part 2:", part_2(grid_))
