@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 directions = [
     (-1, 0),
@@ -24,7 +25,12 @@ rotate = {
 
 
 def read_input(input_data):
-    return np.array([list(row) for row in input_data.splitlines()])
+    input_data = np.array([list(row) for row in input_data.splitlines()])
+    start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
+    start_position = tuple(p.astype(np.int32)[0] for p in start_position)
+    start_direction = map_to_directions[input_data[start_position]]
+    grid = np.vectorize(char_to_bool.get)(input_data)
+    return grid, start_position, start_direction
 
 
 class InfiniteLoop(Exception):
@@ -101,49 +107,26 @@ class Tour:
         return np.sum(self.past_locations)  # Count unique positions visited
 
 
-def part_1(input_data):
-    start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
-    start_position = tuple(p.astype(np.int32)[0] for p in start_position)
-    start_direction = map_to_directions[input_data[start_position]]
-    grid = np.vectorize(char_to_bool.get)(input_data)
+def part_1(grid_orig, start_position, start_direction, obstacle=None):
+    if obstacle:
+        grid = grid_orig.copy()
+        grid[obstacle] = False
+    else:
+        grid = grid_orig
     tour = Tour(grid, start_position, start_direction)
-    return tour.follow_path()
+    tour.follow_path()
+    return tour.past_locations
 
 
-def part_2(input_data):
-    start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
-    start_position = tuple(p.astype(np.int32)[0] for p in start_position)
-    start_direction = map_to_directions[input_data[start_position]]
-    grid = np.vectorize(char_to_bool.get)(input_data)
-
+def part_2(grid, start_position, start_direction, past_locations):
+    wanna_be_obstacles = np.argwhere(past_locations)
     obstacles = []
-    original_tour = Tour(grid, start_position, start_direction)
-
-    # Iterate through all possible steps
-    while not original_tour.is_border_reached():
-        dir_x, dir_y = directions[original_tour.direction]
-        next_position = (original_tour.position[0] + dir_x,
-                         original_tour.position[1] + dir_y)
-
-        if grid[next_position]:
-            # Simulate adding an obstacle
-            grid[next_position] = False
-
-            # Test if the modified grid causes an infinite loop
-            try:
-                tour = Tour(grid,
-                            start_position,
-                            start_direction)
-                tour.follow_path()
-            except InfiniteLoop:
-                obstacles.append(next_position)
-
-            # Remove fake obstacle
-            grid[next_position] = True
-
-        # Move to the next step in the original tour
-        original_tour.move()
-
+    for i in tqdm(range(wanna_be_obstacles.shape[0])):
+        wanna_be_obstacle = tuple(wanna_be_obstacles[i, :])
+        try:
+            part_1(grid, start_position, start_direction, obstacle=wanna_be_obstacle)
+        except InfiniteLoop:
+            obstacles.append(wanna_be_obstacle)
     return len(set(obstacles))
 
 
@@ -162,6 +145,8 @@ test_data = """....#.....
 if __name__ == "__main__":
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    grid_ = read_input(data)
-    print("Part 1:", part_1(grid_))
-    print("Part 2:", part_2(grid_))
+    grid_, start_position_, start_direction_ = read_input(data)
+    past_positions = part_1(grid_, start_position_, start_direction_)
+
+    print("Part 1:", np.sum(past_positions))
+    print("Part 2:", part_2(grid_, start_position_, start_direction_, past_positions))
