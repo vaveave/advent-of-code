@@ -8,7 +8,6 @@ CHAR_TO_BOOL = {".": True, "^": True, ">": True, "v": True, "<": True, "#": Fals
 
 
 class InfiniteLoop(Exception):
-    """Custom exception for detecting infinite loops."""
     pass
 
 
@@ -27,6 +26,10 @@ class Tour:
         self.grid_shape = grid.shape
         self.position = start_position
         self.direction = start_direction
+
+        # self.past_locations: (n, m) matrix tracking if a position (i, j) has been visited.
+        # self.past_rotations: (n, m, 4) matrix tracking if a position (i, j) was visited in a specific direction
+        # (0=Up, 1=Right, 2=Down, 3=Left).
         self.past_locations = np.zeros(grid.shape, dtype=bool)
         self.past_rotations = np.zeros((*grid.shape, 4), dtype=bool)
 
@@ -59,6 +62,7 @@ class Tour:
         return 0 <= x < self.grid_shape[0] and 0 <= y < self.grid_shape[1] and self.grid[position]
 
     def check_infinite_loop(self):
+        """Check if the combination of position/direction has already been visited"""
         if self.past_locations[self.position] and self.past_rotations[self.position + (self.direction,)]:
             raise InfiniteLoop
 
@@ -71,8 +75,7 @@ class Tour:
         return np.sum(self.past_locations)
 
     def is_border_reached(self):
-        next_position = self.next_position()
-        x, y = next_position
+        x, y = self.next_position()
         return not (0 <= x < self.grid_shape[0] and 0 <= y < self.grid_shape[1])
 
 
@@ -94,7 +97,7 @@ def part_2(grid, start_position, start_direction, past_locations):
             part_1(grid, start_position, start_direction, obstacle=obstacle)
         except InfiniteLoop:
             obstacles.append(obstacle)
-    return len(set(obstacles))
+    return len(set(obstacles))  # Remove duplicates from obstacles
 
 
 if __name__ == "__main__":
