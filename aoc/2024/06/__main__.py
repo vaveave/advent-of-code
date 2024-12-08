@@ -1,118 +1,85 @@
 import numpy as np
 from tqdm import tqdm
 
-directions = [
-    (-1, 0),
-    (0, 1),
-    (1, 0),
-    (0, -1)
-]
 
-map_to_directions = {
-    "^": 0,
-    ">": 1,
-    "v": 2,
-    "<": 3
-}
-char_to_bool = {'.': True, '^': True, '>': True, 'v': True, '<': True, '#': False}
+DIRECTIONS = [(-1, 0), (0, 1), (1, 0), (0, -1)]  # Up, Right, Down, Left
+CHAR_TO_DIRECTION = {"^": 0, ">": 1, "v": 2, "<": 3}
+CHAR_TO_BOOL = {".": True, "^": True, ">": True, "v": True, "<": True, "#": False}
 
-rotate = {
-    (1, 0): (0, -1),
-    (0, -1): (-1, 0),
-    (-1, 0): (0, 1),
-    (0, 1): (1, 0),
-}
+
+class InfiniteLoop(Exception):
+    """Custom exception for detecting infinite loops."""
+    pass
 
 
 def read_input(input_data):
     input_data = np.array([list(row) for row in input_data.splitlines()])
-    start_position = np.where(np.isin(input_data, list(map_to_directions.keys())))
+    start_position = np.where(np.isin(input_data, list(CHAR_TO_DIRECTION.keys())))
     start_position = tuple(p.astype(np.int32)[0] for p in start_position)
-    start_direction = map_to_directions[input_data[start_position]]
-    grid = np.vectorize(char_to_bool.get)(input_data)
+    start_direction = CHAR_TO_DIRECTION[input_data[start_position]]
+    grid = np.vectorize(CHAR_TO_BOOL.get)(input_data)
     return grid, start_position, start_direction
 
 
-class InfiniteLoop(Exception):
-    pass
-
-
 class Tour:
-    def __init__(
-            self,
-            grid,
-            start_position,
-            start_direction,
-            past_locations=None,
-            past_rotations=None
-    ):
+    def __init__(self, grid, start_position, start_direction):
         self.grid = grid
         self.grid_shape = grid.shape
         self.position = start_position
         self.direction = start_direction
-
-        # Initialize past_locations and past_rotations if not provided
-        if past_locations is None:
-            self.past_locations = np.zeros((grid.shape[0], grid.shape[1]), dtype=bool)
-        else:
-            self.past_locations = past_locations
-
-        if past_rotations is None:
-            self.past_rotations = np.zeros((grid.shape[0], grid.shape[1], 4), dtype=bool)
-        else:
-            self.past_rotations = past_rotations
+        self.past_locations = np.zeros(grid.shape, dtype=bool)
+        self.past_rotations = np.zeros((*grid.shape, 4), dtype=bool)
 
     def mark_position(self):
-        """Mark the current position and direction in the past history."""
-        self.past_locations[self.position] = True  # Mark position as visited
-        self.past_rotations[self.position + (self.direction,)] = True  # Mark direction as visited
+        self.past_locations[self.position] = True
+        self.past_rotations[self.position + (self.direction,)] = True
 
     def move(self):
-        """Move in the current direction if possible."""
-        pos_x, pos_y = self.position
-        dir_x, dir_y = directions[self.direction]
-
-        # Rotate if the next cell is not traversable
-        while not self.grid[pos_x + dir_x, pos_y + dir_y]:
+        """Move in the current direction if possible, rotating right as needed."""
+        while True:
+            next_position = self.next_position()
+            if self.is_valid_position(next_position):
+                self.position = next_position
+                break
             self.rotate()
-            dir_x, dir_y = directions[self.direction]
-
-        # Update position
-        self.position = (pos_x + dir_x, pos_y + dir_y)
 
     def rotate(self):
         """Rotate the direction clockwise."""
         self.direction = (self.direction + 1) % 4
 
-    def is_border_reached(self):
-        """Check if the next move would leave the grid."""
-        pos_x, pos_y = self.position
-        dir_x, dir_y = directions[self.direction]
-        next_pos_x, next_pos_y = pos_x + dir_x, pos_y + dir_y
-        return next_pos_x < 0 or next_pos_x >= self.grid_shape[0] or next_pos_y < 0 or next_pos_y >= self.grid_shape[1]
+    def next_position(self):
+        """Calculate the next position based on the current direction."""
+        dx, dy = DIRECTIONS[self.direction]
+        x, y = self.position
+        return x + dx, y + dy
+
+    def is_valid_position(self, position):
+        """Check if a position is within bounds and traversable."""
+        x, y = position
+        return 0 <= x < self.grid_shape[0] and 0 <= y < self.grid_shape[1] and self.grid[position]
 
     def check_infinite_loop(self):
-        """Check if the current position and direction form an infinite loop."""
-        pos_x, pos_y = self.position
-        if self.past_locations[pos_x, pos_y] and self.past_rotations[self.position + (self.direction,)]:
+        if self.past_locations[self.position] and self.past_rotations[self.position + (self.direction,)]:
             raise InfiniteLoop
 
     def follow_path(self):
-        """Follow the path until a border is reached or a loop is detected."""
         while not self.is_border_reached():
             self.check_infinite_loop()
             self.mark_position()
             self.move()
         self.mark_position()
-        return np.sum(self.past_locations)  # Count unique positions visited
+        return np.sum(self.past_locations)
+
+    def is_border_reached(self):
+        next_position = self.next_position()
+        x, y = next_position
+        return not (0 <= x < self.grid_shape[0] and 0 <= y < self.grid_shape[1])
 
 
-def part_1(grid_orig, start_position, start_direction, obstacle=None):
+def part_1(grid, start_position, start_direction, obstacle=None):
     if obstacle:
-        grid = grid_orig.copy()
+        grid = grid.copy()
         grid[obstacle] = False
-    else:
-        grid = grid_orig
     tour = Tour(grid, start_position, start_direction)
     tour.follow_path()
     return tour.past_locations
@@ -121,32 +88,23 @@ def part_1(grid_orig, start_position, start_direction, obstacle=None):
 def part_2(grid, start_position, start_direction, past_locations):
     wanna_be_obstacles = np.argwhere(past_locations)
     obstacles = []
-    for i in tqdm(range(wanna_be_obstacles.shape[0])):
-        wanna_be_obstacle = tuple(wanna_be_obstacles[i, :])
+    for position in tqdm(wanna_be_obstacles):
+        obstacle = tuple(position)
         try:
-            part_1(grid, start_position, start_direction, obstacle=wanna_be_obstacle)
+            part_1(grid, start_position, start_direction, obstacle=obstacle)
         except InfiniteLoop:
-            obstacles.append(wanna_be_obstacle)
+            obstacles.append(obstacle)
     return len(set(obstacles))
-
-
-test_data = """....#.....
-.........#
-..........
-..#.......
-.......#..
-..........
-.#..^.....
-........#.
-#.........
-......#..."""
 
 
 if __name__ == "__main__":
     from aoc.initialize_day import load_input
-    data = load_input(__file__)
-    grid_, start_position_, start_direction_ = read_input(data)
-    past_positions = part_1(grid_, start_position_, start_direction_)
 
-    print("Part 1:", np.sum(past_positions))
-    print("Part 2:", part_2(grid_, start_position_, start_direction_, past_positions))
+    raw_input_data = load_input(__file__)
+    parsed_grid, initial_position, initial_direction = read_input(raw_input_data)
+
+    visited_positions_grid = part_1(parsed_grid, initial_position, initial_direction)
+    print("Part 1:", np.sum(visited_positions_grid))
+
+    loop_obstacles_count = part_2(parsed_grid, initial_position, initial_direction, visited_positions_grid)
+    print("Part 2:", loop_obstacles_count)
