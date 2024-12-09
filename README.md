@@ -1,7 +1,7 @@
 
 # Advent of Code Solutions
 
-Welcome to my small Advent of Code corner! 🎄🎮 This repository contains my solutions to the Advent of Code challenges, with one Python script for each day of the challenge. The input data for each day is automatically downloaded using a session token, so all you need to do is run the scripts!
+Welcome to my small **[Advent of Code](https://adventofcode.com/)** corner! 🎄🎮 This repository contains my solutions to the Advent of Code challenges, with one Python script for each day of the challenge. The input data for each day is automatically downloaded using a session token, so all you need to do is run the scripts!
 
 ## Setup Instructions
 

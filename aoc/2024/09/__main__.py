@@ -1,48 +1,59 @@
 import numpy as np
 
 
-def read_input(input_data):
-    len_blocks = np.array([int(input_data[i]) for i in range(len(input_data)) if (i%2) == 0])
-    len_empty = np.array([int(input_data[i]) for i in range(len(input_data)) if (i%2) == 1])
-    return [len_blocks, len_empty]
+def parse_input(disk_map):
+    file_lengths = np.array([int(disk_map[i]) for i in range(len(disk_map)) if i % 2 == 0])
+    free_space_lengths = np.array([int(disk_map[i]) for i in range(len(disk_map)) if i % 2 == 1])
+    return file_lengths, free_space_lengths
 
 
-def calc_disc_status(input_data):
-    len_blocks, len_empty = input_data
+def generate_disk_status(file_lengths, free_space_lengths):
     disk_status = []
-    for i in range(len(len_blocks)-1):
-        disk_status += len_blocks[i] * [i] + len_empty[i] * ["."]
-    if len(len_blocks) >= len(len_empty):
-        disk_status += len_blocks[-1] * [len(len_blocks)-1]
+    for file_id in range(len(file_lengths) - 1):
+        disk_status += file_lengths[file_id] * [file_id]
+        disk_status += free_space_lengths[file_id] * ['.']
+
+    # Handle the last segment
+    if len(file_lengths) >= len(free_space_lengths):
+        disk_status += file_lengths[-1] * [len(file_lengths) - 1]
     else:
-        disk_status += len_empty[-1] * ["."]
+        disk_status += free_space_lengths[-1] * ['.']
     return disk_status
 
 
-def part_1(input_data):
-    disk_status = calc_disc_status(input_data)
-    while "." in disk_status:
-        to_be_mapped = disk_status[-1]
-        ind = disk_status.index(".")
-        disk_status[ind] = to_be_mapped
-        disk_status = disk_status[:-1]
-    return sum([i * int(disk_status[i]) for i in range(len(disk_status))])
+def calculate_checksum(disk_status):
+    return sum(position * int(block) for position, block in enumerate(disk_status) if block != '.')
 
 
-def read_forward_backward(disk_status, pos_start, char, direction):
-    pos = pos_start
-    while disk_status[pos] == char:
-        pos += direction
-    return pos
+def part_1(file_lengths, free_space_lengths):
+    disk_status = generate_disk_status(file_lengths, free_space_lengths)
+
+    while '.' in disk_status:
+        free_space_index = disk_status.index('.')
+        block_to_move = disk_status[-1]
+        disk_status[free_space_index] = block_to_move
+        disk_status.pop()
+
+    return calculate_checksum(disk_status)
 
 
-def part_2(input_data):
+def find_next_position(disk_status, start_index, target_char, step):
+    position = start_index
+    while disk_status[position] == target_char:
+        position += step
+    return position
+
+
+def part_2(file_lengths, free_space_lengths):
     pass
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
-    data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data)))
-    print("Part 2:", part_2(read_input(data)))
+
+    # Load input data
+    raw_data = load_input(__file__)
+    file_lengths_, free_space_lengths_ = parse_input(raw_data)
+
+    print("Part 1:", part_1(file_lengths_, free_space_lengths_))
+    print("Part 2:", part_2(file_lengths_, free_space_lengths_))
