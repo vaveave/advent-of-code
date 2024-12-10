@@ -26,6 +26,9 @@ class Trailhead:
     def calc_score(self):
         return len(set(self.reachable_locations))
 
+    def calc_rating(self):
+        return len(self.reachable_locations)
+
     def is_bored_reached(self, pos):
         return not((0 <= pos[0] < self.island_rows) & (0 <= pos[1] < self.island_columns))
 
@@ -55,9 +58,14 @@ def part_1(island_map):
     return cnt
 
 
-def part_2(input_data):
-    # Implement part 2 solution
-    pass
+def part_2(island_map):
+    start_locations = np.argwhere(island_map == 0)
+    cnt = 0
+    for pos in start_locations:
+        wanna_be_trailhead = Trailhead(island_map, pos)
+        wanna_be_trailhead.find_reachable_locations()
+        cnt += wanna_be_trailhead.calc_rating()
+    return cnt
 
 
 if __name__ == "__main__":
