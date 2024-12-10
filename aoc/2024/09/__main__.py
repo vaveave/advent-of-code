@@ -89,5 +89,5 @@ if __name__ == "__main__":
     raw_data = load_input(__file__)
     file_lengths_, free_space_lengths_ = parse_input(raw_data)
 
-    # print("Part 1:", part_1(file_lengths_, free_space_lengths_))
+    print("Part 1:", part_1(file_lengths_, free_space_lengths_))
     print("Part 2:", part_2(file_lengths_, free_space_lengths_))
