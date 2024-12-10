@@ -44,8 +44,49 @@ def find_next_position(disk_status, start_index, target_char, step):
     return position
 
 
+def find_consecutive_dots(disk_status, n):
+    """
+    Finds the first occurrence of n consecutive '.' in the list.
+
+    Args:
+        disk_status (list): The list to search in.
+        n (int): The number of consecutive dots to find.
+
+    Returns:
+        int: The starting index of the first occurrence of n consecutive dots, or -1 if not found.
+    """
+    count = 0
+    for i, elem in enumerate(disk_status):
+        if elem == '.':
+            count += 1
+            if count == n:
+                return i - n + 1  # Starting index of the sequence
+        else:
+            count = 0
+    return -1  # Not found
+
+
 def part_2(file_lengths, free_space_lengths):
-    pass
+    disk_status = generate_disk_status(file_lengths, free_space_lengths)
+    i = len(disk_status)-1
+    while i >= 0:
+        file_id = disk_status[i]
+        if file_id == ".":
+            i -= 1
+            continue
+        file_id_start = find_next_position(disk_status, i, file_id, -1)
+        file_id_len = i - file_id_start
+        i_begin_empty_slot = find_consecutive_dots(disk_status[:file_id_start+1], file_id_len)
+        if i_begin_empty_slot == -1:
+            i = file_id_start
+            continue
+        else:
+            disk_status[i_begin_empty_slot:i_begin_empty_slot+file_id_len], disk_status[file_id_start+1:i+1] = (
+                disk_status[file_id_start+1:i+1], disk_status[i_begin_empty_slot:i_begin_empty_slot+file_id_len]
+            )
+            i = file_id_start
+
+    return calculate_checksum(disk_status)
 
 
 if __name__ == "__main__":
@@ -55,5 +96,5 @@ if __name__ == "__main__":
     raw_data = load_input(__file__)
     file_lengths_, free_space_lengths_ = parse_input(raw_data)
 
-    print("Part 1:", part_1(file_lengths_, free_space_lengths_))
+    # print("Part 1:", part_1(file_lengths_, free_space_lengths_))
     print("Part 2:", part_2(file_lengths_, free_space_lengths_))
