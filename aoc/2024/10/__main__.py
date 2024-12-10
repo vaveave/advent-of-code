@@ -2,25 +2,22 @@ import numpy as np
 
 
 DIRECTIONS = [
-    (-1, 0),
-    (0, 1),
-    (1, 0),
-    (0, -1)
+    (-1, 0),  # Up
+    (0, 1),   # Right
+    (1, 0),   # Down
+    (0, -1)   # Left
 ]
 
 
 def read_input(input_data):
-    input_data = np.array([list(line) for line in input_data.splitlines()], dtype=str)
-    input_data = np.array([[float(x) if x != "." else np.nan for x in row] for row in input_data])
-    return input_data
+    return np.array([list(line) for line in input_data.splitlines()], dtype=int)
 
 
 class Trailhead:
     def __init__(self, island_map, start_pos):
         self.island_map = island_map
-        self.island_rows = island_map.shape[0]
-        self.island_columns = island_map.shape[1]
-        self.start_pos = start_pos
+        self.rows, self.columns = island_map.shape
+        self.start_pos = tuple(start_pos)
         self.reachable_locations = []
 
     def calc_score(self):
@@ -29,48 +26,52 @@ class Trailhead:
     def calc_rating(self):
         return len(self.reachable_locations)
 
-    def is_bored_reached(self, pos):
-        return not((0 <= pos[0] < self.island_rows) & (0 <= pos[1] < self.island_columns))
+    def is_out_of_bounds(self, pos):
+        row, col = pos
+        return not ((0 <= row < self.rows) & (0 <= col < self.columns))
 
     def follow_path(self, pos, level):
+        # If the level is 9, record the current position as reachable and stop recursion
         if level == 9:
             self.reachable_locations.append(pos)
-        else:
-            for dx, dy in DIRECTIONS:
-                next_pos = (pos[0] + dx, pos[1] + dy)
-                if self.is_bored_reached(next_pos):
-                    continue
-                next_level = level + 1
-                if self.island_map[next_pos] == next_level:
-                    self.follow_path(next_pos, next_level)
+            return
+        # Explore all possible directions
+        for dx, dy in DIRECTIONS:
+            next_pos = (pos[0] + dx, pos[1] + dy)
+            # Skip if out of bound
+            if self.is_out_of_bounds(next_pos):
+                continue
+            # If the next position matches the expected level, continue following the path
+            next_level = level + 1
+            if self.island_map[next_pos] == next_level:
+                self.follow_path(next_pos, next_level)
 
     def find_reachable_locations(self):
         self.follow_path(self.start_pos, 0)
 
 
-def part_1(island_map):
+def initialize_and_process_trailheads(island_map):
     start_locations = np.argwhere(island_map == 0)
-    cnt = 0
-    for pos in start_locations:
-        wanna_be_trailhead = Trailhead(island_map, pos)
-        wanna_be_trailhead.find_reachable_locations()
-        cnt += wanna_be_trailhead.calc_score()
-    return cnt
+    trailheads = [Trailhead(island_map, pos) for pos in start_locations]
+    for trailhead in trailheads:
+        trailhead.find_reachable_locations()
+    return trailheads
 
 
-def part_2(island_map):
-    start_locations = np.argwhere(island_map == 0)
-    cnt = 0
-    for pos in start_locations:
-        wanna_be_trailhead = Trailhead(island_map, pos)
-        wanna_be_trailhead.find_reachable_locations()
-        cnt += wanna_be_trailhead.calc_rating()
-    return cnt
+def part_1(trailheads):
+    return sum(trailhead.calc_score() for trailhead in trailheads)
+
+
+def part_2(trailheads):
+    return sum(trailhead.calc_rating() for trailhead in trailheads)
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data)))
-    print("Part 2:", part_2(read_input(data)))
+    island = read_input(data)
+    all_trailheads = initialize_and_process_trailheads(island)
+
+    print("Part 1:", part_1(all_trailheads))
+    print("Part 2:", part_2(all_trailheads))
