@@ -16,13 +16,12 @@ def transform_rules(stone: str):
 
 
 def part_1(input_data, blinks):
-    stones_evolutions = [[]]*(blinks+1)
-    stones_evolutions[0] = input_data
+    stones_pattern = input_data
     for blink in range(1, blinks+1):
-        stones_evolutions[blink] = list(
-            chain.from_iterable([transform_rules(stone) for stone in stones_evolutions[blink-1]])
+        stones_pattern = list(
+            chain.from_iterable([transform_rules(stone) for stone in stones_pattern])
         )
-    return len(stones_evolutions[-1])
+    return len(stones_pattern)
 
 
 def part_2(input_data):
@@ -34,5 +33,5 @@ if __name__ == "__main__":
 
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data), 25))
+    print("Part 1:", part_1(read_input(data), 75))
     # print("Part 2:", part_1(read_input(data), 75))
