@@ -2,15 +2,19 @@ import numpy as np
 from scipy.ndimage import label
 
 DIRECTIONS = [
-    (-1, 0),  # Up
-    (0, 1),   # Right
-    (1, 0),   # Down
-    (0, -1)   # Left
+    (-1, 0),
+    (0, 1),
+    (1, 0),
+    (0, -1)
 ]
 
 
 def read_input(input_data):
     return np.array(list(np.array(list(line)) for line in input_data.splitlines()))
+
+
+def is_within_bounds(arr, x, y):
+    return (0 <= x < arr.shape[0]) & (0 <= y < arr.shape[1])
 
 
 class Garden:
@@ -36,7 +40,7 @@ class Garden:
     def compute_areas(self):
         for plant, regions in self.regions.items():
             areas = [
-                np.sum(np.sum(regions["Components"] == component)) for component in range(1, regions["NrComponents"]+1)
+                np.sum(np.sum(regions["Components"] == component+1)) for component in range(regions["NrComponents"])
             ]
             self.areas[plant] = areas
 
@@ -55,9 +59,30 @@ class Garden:
     def compute_perimeters(self):
         for plant, regions in self.regions.items():
             perimeters = [
-                self._compute_perimeter(regions["Components"] == component) for component in range(1, regions["NrComponents"]+1)
+                self._compute_perimeter(regions["Components"] == component+1)
+                for component in range(regions["NrComponents"])
             ]
             self.perimeters[plant] = perimeters
+
+    @staticmethod
+    def _compute_sides(component):
+
+        padded_component = np.pad(
+            component, pad_width=1, mode='constant', constant_values=False
+        ).astype(int)
+
+        sides = int((np.abs(np.diff(np.diff(padded_component, axis=0), axis=1)).sum() + np.abs(
+            np.diff(np.diff(padded_component, axis=1), axis=0)).sum()) / 2)
+
+        return sides
+
+    def compute_sides(self):
+        for plant, regions in self.regions.items():
+            sides = [
+                self._compute_sides(regions["Components"] == component+1)
+                for component in range(regions["NrComponents"])
+            ]
+            self.sides[plant] = sides
 
     def compute_total_cost(self):
         total_cost = 0
@@ -71,11 +96,12 @@ class Garden:
         for plant, regions in self.regions.items():
             for component in range(regions["NrComponents"]):
                 total_cost += self.areas[plant][component] * self.sides[plant][component]
-        self.total_cost = total_cost
+        self.total_discounted_cost = total_cost
 
     def compute_all(self):
         self.compute_areas()
         self.compute_perimeters()
+        self.compute_sides()
         self.compute_total_cost()
         self.compute_total_discounted_cost()
 
@@ -88,23 +114,11 @@ def part_2(garden):
     return garden.total_discounted_cost
 
 
-TEST_DATA = """RRRRIICCFF
-RRRRIICCCF
-VVRRRCCFFF
-VVRCCCJFFF
-VVVVCJJCFE
-VVIVCCJJEE
-VVIIICJJEE
-MIIIIIJJEE
-MIIISIJEEE
-MMMISSJEEE"""
-
-
 if __name__ == "__main__":
 
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    garden = Garden(read_input(data))
-    garden.compute_all()
-    print("Part 1:", part_1(garden))
-    print("Part 2:", part_2(garden))
+    garden_ = Garden(read_input(data))
+    garden_.compute_all()
+    print("Part 1:", part_1(garden_))
+    print("Part 2:", part_2(garden_))
