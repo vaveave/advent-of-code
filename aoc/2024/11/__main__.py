@@ -1,37 +1,37 @@
+import numpy as np
+from collections import Counter
 from itertools import chain
 
 
 def read_input(input_data):
-    return input_data.split(" ")
+    return [int(x) for x in input_data.split(" ")]
 
 
-def transform_rules(stone: str):
-    if stone == "0":
-        return ["1"]
-    elif (len(stone) % 2) == 0:
-        new_len = int(len(stone)/2)
-        return [str(int(stone[:new_len])), str(int(stone[new_len:]))]
+def transform_rules(stone):
+    if stone == 0:
+        return [1]
+    elif (len(str(stone)) % 2) == 0:
+        str_stone = str(stone)
+        mid = len(str_stone) // 2
+        return [int(str_stone[:mid]), int(str_stone[mid:])]
     else:
-        return [str(int(stone) * 2024)]
+        return [stone * 2024]
 
 
 def part_1(input_data, blinks):
-    stones_pattern = input_data
-    for blink in range(1, blinks+1):
-        stones_pattern = list(
-            chain.from_iterable([transform_rules(stone) for stone in stones_pattern])
+    stones_counters = []
+    stones_counters.append(Counter(input_data))
+    for blink in range(blinks):
+        new_counter = Counter(
+            list(chain.from_iterable([transform_rules(stone)*count for stone, count in stones_counters[blink].items()]))
         )
-    return len(stones_pattern)
-
-
-def part_2(input_data):
-    # Implement part 2 solution
-    pass
+        stones_counters.append(new_counter)
+    return sum(stones_counters[-1].values())
 
 
 if __name__ == "__main__":
 
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data), 75))
+    print("Part 1:", part_1(read_input(data), 25))
     # print("Part 2:", part_1(read_input(data), 75))
