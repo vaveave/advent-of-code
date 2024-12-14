@@ -1,7 +1,6 @@
 import functools
 from tqdm import tqdm
 from collections import Counter
-from itertools import chain
 
 
 def read_input(input_data):
@@ -20,19 +19,25 @@ def transform_rules(stone):
         return [stone * 2024]
 
 
-def part_1(input_data, blinks):
+def transform_stones(input_data, blinks_part_1, blinks_part_2):
     stones_counters = Counter(input_data)
-    for blink in tqdm(range(blinks)):
-        new_counter = Counter(
-            list(chain.from_iterable([transform_rules(stone)*count for stone, count in stones_counters.items()]))
-        )
+    part_1 = 0
+    for blink in tqdm(range(blinks_part_2)):
+        new_counter = Counter()
+        for stone, count in stones_counters.items():
+            for new_stone in transform_rules(stone):
+                new_counter[new_stone] += count
         stones_counters = new_counter
-    return sum(stones_counters.values())
+        if blink == blinks_part_1:
+            part_1 = sum(stones_counters.values())
+    part_2 = sum(stones_counters.values())
+    return part_1, part_2
 
 
 if __name__ == "__main__":
 
     from aoc.initialize_day import load_input
     data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data), 25))
-    print("Part 2:", part_1(read_input(data), 75))
+    part_1, part_2 = transform_stones(read_input(data), 25, 75)
+    print("Part 1:", part_1)
+    print("Part 2:", part_2)
