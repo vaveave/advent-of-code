@@ -5,18 +5,16 @@ def read_input(input_data):
 def part_1(input_data):
     x, y = 0, 0
     dx, dy = 0, -1
-    history = {(0, 0)}
+    visited = {(0, 0)}
     for _ in range(input_data - 1):
         dx_new, dy_new = -dy, dx
-        x_new = x + dx_new
-        y_new = y + dy_new
-        if (x_new, y_new) not in history:
+        x_new, y_new = x + dx_new, y + dy_new
+        if (x_new, y_new) not in visited:
             x, y = x_new, y_new
             dx, dy = dx_new, dy_new
         else:
-            x += dx
-            y += dy
-        history.add((x, y))
+            x, y = x + dx, y + dy
+        visited.add((x, y))
     return abs(x) + abs(y)
 
 
