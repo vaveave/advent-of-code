@@ -3,9 +3,9 @@ import re
 
 def is_abba(segment):
     if (
-            (segment[0] == segment[3])
-            and (segment[1] == segment[2])
-            and (segment[0] != segment[2])
+        (segment[0] == segment[3])
+        and (segment[1] == segment[2])
+        and (segment[0] != segment[2])
     ):
         return True
     return False
@@ -25,7 +25,7 @@ def is_bab(aba, hypernet):
 
 def contain_abbas(net):
     for i in range(4, len(net) + 1):
-        if is_abba(net[i - 4:i]):
+        if is_abba(net[i - 4 : i]):
             return True
     return False
 
@@ -37,10 +37,7 @@ def split_ip_components(ip):
 
 def support_tls(ip):
     supernets, hypernets = split_ip_components(ip)
-    if (
-        not any(map(contain_abbas, hypernets))
-        and any(map(contain_abbas, supernets))
-    ):
+    if not any(map(contain_abbas, hypernets)) and any(map(contain_abbas, supernets)):
         return True
     return False
 
@@ -49,7 +46,7 @@ def support_ssl(ip):
     supernets, hypernets = split_ip_components(ip)
     for supernet in supernets:
         for i in range(3, len(supernet) + 1):
-            segment = supernet[i - 3:i]
+            segment = supernet[i - 3 : i]
             if is_aba(segment):
                 if any(is_bab(segment, hypernet) for hypernet in hypernets):
                     return True
@@ -67,8 +64,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

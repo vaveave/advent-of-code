@@ -14,7 +14,11 @@ def transform_rules(stone):
         return [1]
     str_stone = str(stone)
     mid = len(str_stone) // 2
-    return [int(str_stone[:mid]), int(str_stone[mid:])] if len(str_stone) % 2 == 0 else [stone * 2024]
+    return (
+        [int(str_stone[:mid]), int(str_stone[mid:])]
+        if len(str_stone) % 2 == 0
+        else [stone * 2024]
+    )
 
 
 def transform_stones(input_data, blinks_part_1, blinks_part_2):

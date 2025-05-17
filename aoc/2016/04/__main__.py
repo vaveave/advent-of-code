@@ -10,12 +10,15 @@ def part_1(input_data):
         matched_pattern = re.match(pattern, room)
         decoded_room = [
             matched_pattern.group(1).replace("-", ""),
-            int(matched_pattern.group(2)), matched_pattern.group(3)
+            int(matched_pattern.group(2)),
+            matched_pattern.group(3),
         ]
         # Count the occurrences of each character
         char_count = Counter(decoded_room[0])
         # Sort the characters by frequency (descending), then alphabetically for ties
-        sorted_string = ''.join(sorted(decoded_room[0], key=lambda x: (-char_count[x], x)))
+        sorted_string = "".join(
+            sorted(decoded_room[0], key=lambda x: (-char_count[x], x))
+        )
         if "".join(list(OrderedDict.fromkeys(sorted_string)))[:5] == decoded_room[2]:
             real_rooms_counter += decoded_room[1]
     return str(real_rooms_counter)
@@ -37,7 +40,11 @@ def part_2(input_data):
     output = []
     for room in rooms_list:
         matched_pattern = re.match(pattern, room)
-        decoded_room = [matched_pattern.group(1), int(matched_pattern.group(2)), matched_pattern.group(3)]
+        decoded_room = [
+            matched_pattern.group(1),
+            int(matched_pattern.group(2)),
+            matched_pattern.group(3),
+        ]
         decoded_room[0] = decrypt_room_name(decoded_room[0], decoded_room[1])
         if "north" in decoded_room[0]:
             output += decoded_room
@@ -45,8 +52,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

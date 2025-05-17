@@ -1,16 +1,14 @@
-
-
 # Define a dictionary mapping string literals to digits
 literals_to_digits = {
-    'one': '1',
-    'two': '2',
-    'three': '3',
-    'four': '4',
-    'five': '5',
-    'six': '6',
-    'seven': '7',
-    'eight': '8',
-    'nine': '9',
+    "one": "1",
+    "two": "2",
+    "three": "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9",
 }
 
 
@@ -29,7 +27,7 @@ def calib_from_string(str_):
 
 def first_str_digit(str_):
     for i in range(len(str_)):
-        for digit in list(literals_to_digits)+list(literals_to_digits.values()):
+        for digit in list(literals_to_digits) + list(literals_to_digits.values()):
             if str_[i:].startswith(digit):
                 return literals_to_digits.get(digit, digit)
     raise ValueError(f"Input {str_} does not contain any digits")
@@ -37,7 +35,7 @@ def first_str_digit(str_):
 
 def last_str_digit(str_):
     for i in range(len(str_), 0, -1):
-        for digit in list(literals_to_digits)+list(literals_to_digits.values()):
+        for digit in list(literals_to_digits) + list(literals_to_digits.values()):
             if str_[:i].endswith(digit):
                 return literals_to_digits.get(digit, digit)
     raise ValueError(f"Input {str_} does not contain any digits")
@@ -56,14 +54,15 @@ def part_1(input_data):
 
 def part_2(input_data):
     calibration_values = [
-        int(calib_from_string_with_replacement(line_)) for line_ in input_data.splitlines()
+        int(calib_from_string_with_replacement(line_))
+        for line_ in input_data.splitlines()
     ]
     return str(sum(calibration_values))
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

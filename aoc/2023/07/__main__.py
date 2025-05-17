@@ -2,7 +2,12 @@ from enum import Enum
 
 
 def process_input(input_str):
-    return list(map(lambda str_: [str_.split(" ")[0], int(str_.split(" ")[1])], input_str.split("\n")))
+    return list(
+        map(
+            lambda str_: [str_.split(" ")[0], int(str_.split(" ")[1])],
+            input_str.split("\n"),
+        )
+    )
 
 
 class CamelCardsHandType(Enum):
@@ -37,10 +42,13 @@ class Hand:
     def hand_type(self) -> CamelCardsHandType:
         to_be_checked = self.cards
         if self.use_jokers:
-            if self.cards == "J"*5:
+            if self.cards == "J" * 5:
                 return CamelCardsHandType.FiveOfAKind
             if "J" in self.cards:
-                char_counts = {char: self.cards.count(char) for char in set(self.cards.replace("J", ""))}
+                char_counts = {
+                    char: self.cards.count(char)
+                    for char in set(self.cards.replace("J", ""))
+                }
                 most_common_char = max(char_counts, key=char_counts.get)
                 to_be_checked = self.cards.replace("J", most_common_char)
         char_count = {}
@@ -88,18 +96,20 @@ def sort_hands(hands):
 def part_1(input_data):
     hands = [Hand.from_string(str_) for str_ in input_data.splitlines()]
     sorted_hands = sort_hands(hands)
-    return str(sum([(i+1) * hand.bid for i, hand in enumerate(sorted_hands)]))
+    return str(sum([(i + 1) * hand.bid for i, hand in enumerate(sorted_hands)]))
 
 
 def part_2(input_data):
-    hands = [Hand.from_string(str_, use_jokers=True) for str_ in input_data.splitlines()]
+    hands = [
+        Hand.from_string(str_, use_jokers=True) for str_ in input_data.splitlines()
+    ]
     sorted_hands = sort_hands(hands)
-    return str(sum([(i+1) * hand.bid for i, hand in enumerate(sorted_hands)]))
+    return str(sum([(i + 1) * hand.bid for i, hand in enumerate(sorted_hands)]))
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

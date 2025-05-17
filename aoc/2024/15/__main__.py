@@ -11,8 +11,7 @@ def parse_input(input_data):
 
 def preprocess_input_for_large_boxes(input_data):
     modified_data = (
-        input_data
-        .replace("#", "##")
+        input_data.replace("#", "##")
         .replace("O", "[]")
         .replace(".", "..")
         .replace("@", "@.")
@@ -31,12 +30,10 @@ def check_and_make_to_be_moved(pos, to_be_moved):
 
 
 def move_boxes(input_data):
-
     grid, directions = input_data
     start_x, start_y = tuple(np.argwhere(grid == "@")[0])
 
     for direction in directions.replace("\n", ""):
-
         # print("\n".join("".join(row) for row in grid))
         # print(f"Move: {direction}\n")
 
@@ -47,13 +44,13 @@ def move_boxes(input_data):
 
         while i < len(to_be_moved):
             x, y = to_be_moved[i]
-            new_x, new_y = x+dx, y+dy
+            new_x, new_y = x + dx, y + dy
             if grid[new_x, new_y] in "O[]":
                 check_and_make_to_be_moved((new_x, new_y), to_be_moved)
                 if grid[new_x, new_y] == "[":
-                    check_and_make_to_be_moved((new_x, new_y+1), to_be_moved)
+                    check_and_make_to_be_moved((new_x, new_y + 1), to_be_moved)
                 if grid[new_x, new_y] == "]":
-                    check_and_make_to_be_moved((new_x, new_y-1), to_be_moved)
+                    check_and_make_to_be_moved((new_x, new_y - 1), to_be_moved)
             elif grid[new_x, new_y] == "#":
                 jump_to_next = True
                 break
@@ -67,11 +64,11 @@ def move_boxes(input_data):
         for x, y in to_be_moved:
             new_grid[x, y] = "."
         for x, y in to_be_moved:
-            new_grid[x+dx, y+dy] = grid[x, y]
+            new_grid[x + dx, y + dy] = grid[x, y]
 
         grid = new_grid
 
-        start_x, start_y = start_x+dx, start_y+dy
+        start_x, start_y = start_x + dx, start_y + dy
 
     return calculate_gps(grid)
 

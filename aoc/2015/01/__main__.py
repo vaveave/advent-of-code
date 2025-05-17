@@ -1,5 +1,3 @@
-
-
 def change_floor(char_):
     match char_:
         case "(":
@@ -24,12 +22,12 @@ def part_2(input_data):
         floor += change_floor(char)
         if floor == -1:
             break
-    return str(i+1)
+    return str(i + 1)
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

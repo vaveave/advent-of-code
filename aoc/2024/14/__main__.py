@@ -1,4 +1,5 @@
 import re
+
 import numpy as np
 from tqdm import tqdm
 
@@ -14,7 +15,7 @@ def read_input(input_data):
 
 def calculate_grid(coordinates, n_rows, n_columns):
     grid = np.zeros((n_rows, n_columns), dtype=int)
-    for (pos, _) in coordinates:
+    for pos, _ in coordinates:
         grid[pos] += 1
     return grid
 
@@ -29,9 +30,9 @@ def calculate_safety_factor(grid):
     mid_row, mid_col = grid.shape[0] // 2, grid.shape[1] // 2
     quadrants = [
         grid[:mid_row, :mid_col],
-        grid[:mid_row, mid_col+1:],
-        grid[mid_row+1:, :mid_col],
-        grid[mid_row+1:, mid_col+1:]
+        grid[:mid_row, mid_col + 1 :],
+        grid[mid_row + 1 :, :mid_col],
+        grid[mid_row + 1 :, mid_col + 1 :],
     ]
     return np.prod([q.sum() for q in quadrants])
 
@@ -63,7 +64,11 @@ def simulate(coordinates, n_rows, n_columns, n_seconds):
             print("\n".join("".join(row) for row in visual_grid))
             print(f"Seconds elapsed: {second + 1}")
 
-            response = input("Continue searching for the Christmas tree? (y/n): ").strip().lower()
+            response = (
+                input("Continue searching for the Christmas tree? (y/n): ")
+                .strip()
+                .lower()
+            )
             if response == "n":
                 break
 

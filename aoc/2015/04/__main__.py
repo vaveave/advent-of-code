@@ -4,9 +4,9 @@ import hashlib
 def mine_adventcoin(secret_key, n_zeros):
     number = 1
     while True:
-        to_be_hashed = f"{secret_key}{number}".encode('utf-8')
+        to_be_hashed = f"{secret_key}{number}".encode("utf-8")
         hash_hex = hashlib.md5(to_be_hashed).hexdigest()
-        if hash_hex[:n_zeros] == '0'*n_zeros:
+        if hash_hex[:n_zeros] == "0" * n_zeros:
             return number
         number += 1
 
@@ -20,8 +20,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

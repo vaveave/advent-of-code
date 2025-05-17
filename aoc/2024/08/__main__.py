@@ -40,8 +40,8 @@ def part_2(grid, frequencies_locations):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     grid_, frequencies_locations_ = read_input(data)
 

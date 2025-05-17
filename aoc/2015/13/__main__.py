@@ -9,7 +9,9 @@ def read_input(input_data):
     out = {}
     for line in input_data.splitlines():
         match = pattern.findall(line)[0]
-        out.update({(match[0], match[3]): int(match[2]) * (1 if match[1] == "gain" else -1)})
+        out.update(
+            {(match[0], match[3]): int(match[2]) * (1 if match[1] == "gain" else -1)}
+        )
     return out
 
 
@@ -18,9 +20,7 @@ class AttendeesCombination:
         self.names = names
         self.scores = scores
         self.len = len(names)
-        self.normalized_names = min(
-            names[k:] + names[:k] for k in range(len(names))
-        )
+        self.normalized_names = min(names[k:] + names[:k] for k in range(len(names)))
 
     def __eq__(self, other):
         return self.normalized_names == other.normalized_names
@@ -29,10 +29,9 @@ class AttendeesCombination:
         return hash(self.normalized_names)
 
     def compute_score(self):
-        pairs = (
-            [(self.names[k], self.names[(k+1) % self.len]) for k in range(self.len)] +
-            [(self.names[(k+1) % self.len], self.names[k]) for k in range(self.len)]
-        )
+        pairs = [
+            (self.names[k], self.names[(k + 1) % self.len]) for k in range(self.len)
+        ] + [(self.names[(k + 1) % self.len], self.names[k]) for k in range(self.len)]
         return sum(self.scores[pair] for pair in pairs)
 
 
@@ -42,7 +41,10 @@ def part_1(input_data, neutral_guest=False):
         input_data.update({("Guest", a): 0 for a in attendees})
         input_data.update({(a, "Guest"): 0 for a in attendees})
         attendees.add("Guest")
-    combinations = {AttendeesCombination(k, input_data) for k in list(itertools.permutations(attendees))}
+    combinations = {
+        AttendeesCombination(k, input_data)
+        for k in list(itertools.permutations(attendees))
+    }
     return max([combo.compute_score() for combo in combinations])
 
 
@@ -51,8 +53,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))

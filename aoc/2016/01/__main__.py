@@ -28,7 +28,7 @@ def part_2(input_data):
     for instruction in instructions:
         sign, rotation = mapping[instruction[0]]
 
-        for i in range(1, int(instruction[1:])+1):
+        for i in range(1, int(instruction[1:]) + 1):
             position += sign * direction
             if any(np.array_equal(position, step) for step in positions):
                 return abs(position[0]) + abs(position[1])
@@ -40,8 +40,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

@@ -59,11 +59,18 @@ class Tour:
     def is_valid_position(self, position):
         """Check if a position is within bounds and traversable."""
         x, y = position
-        return 0 <= x < self.grid_shape[0] and 0 <= y < self.grid_shape[1] and self.grid[position]
+        return (
+            0 <= x < self.grid_shape[0]
+            and 0 <= y < self.grid_shape[1]
+            and self.grid[position]
+        )
 
     def check_infinite_loop(self):
         """Check if the combination of position/direction has already been visited"""
-        if self.past_locations[self.position] and self.past_rotations[self.position + (self.direction,)]:
+        if (
+            self.past_locations[self.position]
+            and self.past_rotations[self.position + (self.direction,)]
+        ):
             raise InfiniteLoop
 
     def follow_path(self):
@@ -109,5 +116,7 @@ if __name__ == "__main__":
     visited_positions_grid = part_1(parsed_grid, initial_position, initial_direction)
     print("Part 1:", np.sum(visited_positions_grid))
 
-    loop_obstacles_count = part_2(parsed_grid, initial_position, initial_direction, visited_positions_grid)
+    loop_obstacles_count = part_2(
+        parsed_grid, initial_position, initial_direction, visited_positions_grid
+    )
     print("Part 2:", loop_obstacles_count)

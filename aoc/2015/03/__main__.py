@@ -1,5 +1,3 @@
-
-
 def map_instruction(move):
     match move:
         case "^":
@@ -18,12 +16,7 @@ def follow_path(starting_position, instructions):
     path = [starting_position]
     for i, move in enumerate(instructions):
         instr = map_instruction(move)
-        path.append(
-            (
-                path[i][0] + instr[0],
-                path[i][1] + instr[1]
-            )
-        )
+        path.append((path[i][0] + instr[0], path[i][1] + instr[1]))
     return path
 
 
@@ -39,8 +32,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

@@ -7,8 +7,12 @@ decode_instr = {"L": 0, "R": 1}
 def process_input(input_str):
     instructions, nodes_str = input_str.split("\n\n")
     nodes_map = {
-        node.split(" = ")[0]:
-            eval(node.split(" = ")[1].replace('(', '[\'').replace(')', '\']').replace(', ', '\',\''))
+        node.split(" = ")[0]: eval(
+            node.split(" = ")[1]
+            .replace("(", "['")
+            .replace(")", "']")
+            .replace(", ", "','")
+        )
         for node in nodes_str.split("\n")
     }
     return instructions, nodes_map
@@ -28,7 +32,7 @@ def follow_the_path_mr_camel(input_str):
 
 def follow_the_ghosts_path_mr_camel(input_str):
     instructions, nodes_map = process_input(input_str)
-    nodes = [node for node in nodes_map.keys() if node.endswith('A')]
+    nodes = [node for node in nodes_map.keys() if node.endswith("A")]
 
     def follow_the_ghosts_path(node):
         i = 0
@@ -52,8 +56,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

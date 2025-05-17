@@ -14,7 +14,7 @@ def decompress_string(string):
                 length, repeat = map(int, match.groups())
                 marker_length = match.end()
                 i += marker_length
-                decompressed.append(string[i:i+length] * repeat)
+                decompressed.append(string[i : i + length] * repeat)
                 i += length
     return "".join(decompressed)
 
@@ -37,10 +37,11 @@ def part_2(input_data):
                     marker_length = match.end()
                     segment_length, repeat = map(int, match.groups())
                     i += marker_length
-                    subsegment = string[i:i+segment_length]
+                    subsegment = string[i : i + segment_length]
                     length += recursive_decompress(subsegment) * repeat
                     i += segment_length
         return length
+
     return recursive_decompress(input_data)
 
 
@@ -51,13 +52,13 @@ test_data_1 = {
     "(3x3)XYZ": "XYZXYZXYZ",
     "A(2x2)BCD(2x2)EFG": "ABCBCDEFEFG",
     "(6x1)(1x3)A": "(1x3)A",
-    "X(8x2)(3x3)ABCY": "X(3x3)ABC(3x3)ABCY"
+    "X(8x2)(3x3)ABCY": "X(3x3)ABC(3x3)ABCY",
 }
 
 test_data_2 = {
     "X(8x2)(3x3)ABCY": len("XABCABCABCABCABCABCY"),
     "(27x12)(20x12)(13x14)(7x10)(1x12)A": 241920,
-    "(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN": 445
+    "(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN": 445,
 }
 
 
@@ -72,8 +73,8 @@ def test_recursive_decompression():
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
 
     test_decompress_string()

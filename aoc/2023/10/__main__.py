@@ -13,7 +13,7 @@ move_map = {
 
 
 def do_move(move: tuple, current_pos: tuple, pipes_array: np.append):
-    next_pos = tuple(a+b for a, b in zip(current_pos, move))
+    next_pos = tuple(a + b for a, b in zip(current_pos, move))
     next_val = pipes_array[next_pos[0], next_pos[1]]
     return next_pos, next_val
 
@@ -38,7 +38,7 @@ def explore_path(input_str):
 
 def part_1(input_data):
     path = explore_path(input_data)
-    return int(len(path)/2)
+    return int(len(path) / 2)
 
 
 def part_2(input_data):
@@ -46,8 +46,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

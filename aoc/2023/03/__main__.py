@@ -14,7 +14,7 @@ def isolate_part(row: str, pos: int):
         end_pos += 1
 
     # Extract the digits from the string
-    extracted_digits = row[start_pos + 1:end_pos]
+    extracted_digits = row[start_pos + 1 : end_pos]
     return int(extracted_digits)
 
 
@@ -22,8 +22,10 @@ def get_all_possible_engine_parts(engine):
     possible_engine_parts = []
     for row in engine:
         row_engine_parts = []
-        for match in re.finditer(r'\d+', row):
-            row_engine_parts.append((match.start(), match.start()+len(match.group())-1, match.group()))
+        for match in re.finditer(r"\d+", row):
+            row_engine_parts.append(
+                (match.start(), match.start() + len(match.group()) - 1, match.group())
+            )
         possible_engine_parts.append(row_engine_parts)
     return possible_engine_parts
 
@@ -33,10 +35,14 @@ def get_engine_parts(engine):
     parts_candidates = get_all_possible_engine_parts(engine)
     for i, row in enumerate(engine):
         for j, char in enumerate(row):
-            if not re.match(r'[0-9.]', char):
-                close_candidates = [item for sublist in parts_candidates[i-1:i+2] for item in sublist]
+            if not re.match(r"[0-9.]", char):
+                close_candidates = [
+                    item
+                    for sublist in parts_candidates[i - 1 : i + 2]
+                    for item in sublist
+                ]
                 for candidate in close_candidates:
-                    if abs(candidate[0]-j) <= 1 or abs(candidate[1]-j) <= 1:
+                    if abs(candidate[0] - j) <= 1 or abs(candidate[1] - j) <= 1:
                         engine_parts.append(candidate)
     return engine_parts
 
@@ -53,9 +59,13 @@ def get_engine_gears(engine):
         for j, char in enumerate(row):
             if char == "*":
                 char_candidates = []
-                close_candidates = [item for sublist in parts_candidates[i-1:i+2] for item in sublist]
+                close_candidates = [
+                    item
+                    for sublist in parts_candidates[i - 1 : i + 2]
+                    for item in sublist
+                ]
                 for candidate in close_candidates:
-                    if abs(candidate[0]-j) <= 1 or abs(candidate[1]-j) <= 1:
+                    if abs(candidate[0] - j) <= 1 or abs(candidate[1] - j) <= 1:
                         char_candidates.append(candidate)
                 if len(char_candidates) == 2:
                     engine_gears.append(char_candidates)
@@ -64,12 +74,12 @@ def get_engine_gears(engine):
 
 def part_2(input_data):
     gears = get_engine_gears(input_data.splitlines())
-    return sum([int(gear[0][2])*int(gear[1][2]) for gear in gears])
+    return sum([int(gear[0][2]) * int(gear[1][2]) for gear in gears])
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))

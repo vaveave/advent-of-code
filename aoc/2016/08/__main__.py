@@ -6,7 +6,7 @@ def parse_operation(instruction):
     patterns = {
         "rect": r"^rect (\d+)x(\d+)$",
         "row": r"^rotate row y=(\d+) by (\d+)$",
-        "column": r"^rotate column x=(\d+) by (\d+)$"
+        "column": r"^rotate column x=(\d+) by (\d+)$",
     }
     for i, key in enumerate(patterns.keys()):
         if match := re.match(patterns[key], instruction):
@@ -45,8 +45,8 @@ rotate column x=1 by 1
 shape_test = (3, 7)
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
 
     shape = (6, 50)

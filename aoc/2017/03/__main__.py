@@ -41,21 +41,17 @@ def part_2(input_data):
     x, y = 0, 0
     dx, dy = 0, -1
     visited = {(0, 0): 1}
-    neighbors = [
-        (0, 1), (1, 0), (0, -1), (-1, 0), 
-        (1, 1), (1, -1), (-1, 1), (-1, -1)
-    ]
+    neighbors = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
     while True:
         if visited[(x, y)] > input_data:
             return visited[(x, y)]
         x, y, dx, dy = spiral_move(x, y, dx, dy, visited)
-        visited[(x, y)] = sum(
-            visited.get((x + dx, y + dy), 0) for dx, dy in neighbors
-        )
+        visited[(x, y)] = sum(visited.get((x + dx, y + dy), 0) for dx, dy in neighbors)
 
 
 if __name__ == "__main__":
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))

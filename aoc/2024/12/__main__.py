@@ -15,31 +15,34 @@ class Garden:
         self.total_discounted_cost = 0
 
         for plant in self.plants:
-            binary_array = (garden_data == plant)
+            binary_array = garden_data == plant
             labeled_array, num_features = label(binary_array)
             self.regions[plant] = {
                 "NrComponents": num_features,
-                "Components": labeled_array
+                "Components": labeled_array,
             }
 
         self.compute_all()
 
     def compute_all(self):
         for plant, regions in self.regions.items():
-
             for component in range(1, regions["NrComponents"] + 1):
-                component_mask = (regions["Components"] == component)
+                component_mask = regions["Components"] == component
 
                 area = np.sum(component_mask)
 
                 padded_component = np.pad(
-                    component_mask, pad_width=1, mode='constant', constant_values=False
+                    component_mask, pad_width=1, mode="constant", constant_values=False
                 ).astype(int)
-                perimeter = (np.abs(np.diff(padded_component, axis=0)).sum() +
-                             np.abs(np.diff(padded_component, axis=1)).sum())
+                perimeter = (
+                    np.abs(np.diff(padded_component, axis=0)).sum()
+                    + np.abs(np.diff(padded_component, axis=1)).sum()
+                )
 
-                side_count = (np.abs(np.diff(np.diff(padded_component, axis=0), axis=1)).sum() +
-                              np.abs(np.diff(np.diff(padded_component, axis=1), axis=0)).sum()) // 2
+                side_count = (
+                    np.abs(np.diff(np.diff(padded_component, axis=0), axis=1)).sum()
+                    + np.abs(np.diff(np.diff(padded_component, axis=1), axis=0)).sum()
+                ) // 2
 
                 self.total_cost += area * perimeter
                 self.total_discounted_cost += area * side_count
@@ -55,6 +58,7 @@ def part_2(garden):
 
 if __name__ == "__main__":
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     garden_ = Garden(read_input(data))
     print("Part 1:", part_1(garden_))

@@ -1,10 +1,8 @@
 import numpy as np
 
-adjacents = np.array([
-    (-1, 1),  (0, 1),  (1, 1),
-    (-1, 0),           (1, 0),
-    (-1, -1), (0, -1), (1, -1)
-])
+adjacents = np.array(
+    [(-1, 1), (0, 1), (1, 1), (-1, 0), (1, 0), (-1, -1), (0, -1), (1, -1)]
+)
 
 
 def read_input(input_data):
@@ -18,8 +16,8 @@ def is_within_bounds(arr, x, y):
 def count_adjacents(arr, x, y):
     counter = 0
     for dx, dy in adjacents:
-        if is_within_bounds(arr, x + dx*3, y + dy*3):
-            if "".join([arr[x + k*dx, y + k*dy][0] for k in range(4)]) == "XMAS":
+        if is_within_bounds(arr, x + dx * 3, y + dy * 3):
+            if "".join([arr[x + k * dx, y + k * dy][0] for k in range(4)]) == "XMAS":
                 counter += 1
     return counter
 
@@ -34,10 +32,15 @@ def check_mas_diagonals(arr, x, y):
         [(x - 1, y - 1), (x, y), (x + 1, y + 1)],  # Top-left to bottom-right
         [(x - 1, y + 1), (x, y), (x + 1, y - 1)],  # Top-right to bottom-left
     ]
-    top_left_bottom_right = [arr[dx, dy] for dx, dy in diagonals[0] if is_within_bounds(arr, dx, dy)]
-    top_right_bottom_left = [arr[dx, dy] for dx, dy in diagonals[1] if is_within_bounds(arr, dx, dy)]
+    top_left_bottom_right = [
+        arr[dx, dy] for dx, dy in diagonals[0] if is_within_bounds(arr, dx, dy)
+    ]
+    top_right_bottom_left = [
+        arr[dx, dy] for dx, dy in diagonals[1] if is_within_bounds(arr, dx, dy)
+    ]
     if all(
-            x in ["MAS", "SAM"] for x in ["".join(top_left_bottom_right), "".join(top_right_bottom_left)]
+        x in ["MAS", "SAM"]
+        for x in ["".join(top_left_bottom_right), "".join(top_right_bottom_left)]
     ):
         return True
     return False
@@ -54,8 +57,8 @@ def part_2(input_data):
 
 
 if __name__ == "__main__":
-
     from aoc.initialize_day import load_input
+
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))
