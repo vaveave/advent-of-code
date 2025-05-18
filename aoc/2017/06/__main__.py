@@ -1,5 +1,6 @@
 from math import ceil
 
+
 def read_input(input_data):
     return [int(line) for line in input_data.split("\t")]
 
@@ -16,7 +17,7 @@ def part_1_and_2(all_blocks: list[int]):
         # Distribute blocks
         blocks_to_distribute = ceil(max_val / length)
         distributed = max_val
-        for i in range(length-1):
+        for i in range(length - 1):
             ind = (argmax + i + 1) % length
             new_val = min(blocks_to_distribute, distributed)
             # Distribute blocks to the next index
@@ -33,5 +34,5 @@ if __name__ == "__main__":
 
     data = load_input(__file__)
     cnt, cycle_length = part_1_and_2(read_input(data))
-    print("Part 1:", cnt)   
+    print("Part 1:", cnt)
     print("Part 2:", cycle_length)
