@@ -2,7 +2,7 @@ def read_input(input_data):
     return [int(line) for line in input_data.splitlines()]
 
 
-def move_pointer(instructions, jump_cap=None):
+def move_pointer(instructions: list[int], jump_cap: int | None = None) -> int:
     cnt = 0
     curr_pos = 0
     length = len(instructions)
