@@ -1,3 +1,4 @@
+TEMPLATE = """
 def read_input(input_data):
     return input_data
 
@@ -18,3 +19,5 @@ if __name__ == "__main__":
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))
+
+"""

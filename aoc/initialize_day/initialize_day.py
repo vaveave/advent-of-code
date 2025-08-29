@@ -1,7 +1,8 @@
 import os
 import requests
-import shutil
 from pathlib import Path
+
+from aoc.initialize_day.day_template import TEMPLATE
 
 
 def get_session_token():
@@ -85,14 +86,14 @@ def initialize_day(year, day):
     folder = year_folder / str(day).zfill(2)
     folder.mkdir(parents=True, exist_ok=True)
 
-    # Copy the template script to the day folder and rename it
-    template_path = Path(__file__).parent.parent / "initialize_day" / "day_template.py"
+    # Write TEMPLATE to the day's script file
     script_path = folder / "__main__.py"
     if not script_path.exists():
-        shutil.copy(template_path, script_path)
-        print(f"Script created at {script_path}")
+        with open(script_path, "w") as script_file:
+            script_file.write(TEMPLATE.strip())
+        print(f"Created script file at {script_path}")
     else:
-        print(f"Script already exists at {script_path}")
+        print(f"Script file already exists at {script_path}")
 
     # Download the input file
     load_input(script_path)
