@@ -46,25 +46,32 @@ poetry shell
 
 ### 3. Run the Solution for Any Day
 
-Each day has its own Python script ready to run. Simply use this command to run the solution for a specific day:
+
+You can use a single command to run any day's solution:
 
 ```bash
-py -m aoc.2023.01
+py -m aoc <year> <day>
 ```
 
-Just replace `2023.01` with the year and day you want to run (e.g., `2023.01` for Day 2 of 2023).
+For example, to run Day 1 of 2023:
+
+```bash
+py -m aoc 2023 1
+```
 
 ### 4. (Optional) Day Initialization
-If you want to create the folder structure and script template for a specific day automatically, run the following command in your terminal:
+To create the folder structure and script template for a specific day automatically, use the `-init` flag:
 
 ```bash
-py -m aoc.initialize_day <year> <day>
+py -m aoc <year> <day> -init
 ```
-Replace `<year>` and `<day>` with the desired year and day. For example, to initialize Day 1 of 2023:
+
+For example, to initialize Day 1 of 2023:
 
 ```bash
-py -m aoc.initialize_day 2023 1
+py -m aoc 2023 1 -init
 ```
+
 #### What If the Input File Is Missing?
 If the input file for the day is missing when running the script, it will attempt to download it automatically using your session token.
 
