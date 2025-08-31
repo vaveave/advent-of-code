@@ -5,12 +5,12 @@ from pathlib import Path
 from aoc.initialize_day.day_template import TEMPLATE
 
 
-def get_session_token():
+def _get_session_token():
     """Retrieve the session token from the environment variable."""
     return os.getenv("ADVENT_OF_CODE_SESSION_ID")
 
 
-def download_input(year, day, folder):
+def _download_input(year, day, folder):
     """
     Download the input file for a specific day and save it to the given folder.
 
@@ -20,7 +20,7 @@ def download_input(year, day, folder):
         folder (Path): The folder path where the input file will be saved.
     """
     url = f"https://adventofcode.com/{year}/day/{day}/input"
-    session_token = get_session_token()
+    session_token = _get_session_token()
     if not session_token:
         raise ValueError(
             "No session token found. Set ADVENT_OF_CODE_SESSION_ID in your environment."
@@ -55,9 +55,9 @@ def load_input(path: str | Path):
             year = int(folder.parts[-2])
             day = int(folder.parts[-1])
             print(
-                f"Input file not found. Attempting to download for year {year}, day {day}..."
+                f"Input file doesn't exist yet. Downloading for year {year}, day {day}..."
             )
-            download_input(year, day, folder)
+            _download_input(year, day, folder)
         except Exception as e:
             print(f"Error downloading input: {e}")
             raise  # Re-raise the exception to stop further execution
