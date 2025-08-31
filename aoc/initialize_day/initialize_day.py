@@ -30,11 +30,16 @@ def _download_input(year, day, folder):
     headers = {"User-Agent": "AdventOfCodeInputDownloader/1.0 (example@example.com)"}
 
     response = requests.get(url, cookies=cookies, headers=headers)
+    input_path = folder / "input.txt"
     if response.status_code == 200:
-        input_path = folder / "input.txt"
         input_path.write_text(response.text.strip())
-        print(f"Input downloaded to {input_path}")
+        print(f"✅ Input downloaded: {input_path.relative_to(Path.cwd())}")
+    elif response.status_code == 404:
+        print(f"⚠️  Input for year {year}, day {day} is not available yet on Advent of Code.")
+        print("You can start coding, but input.txt will be empty until the puzzle is released.")
+        input_path.write_text("")
     else:
+        print(f"❌ Failed to download input. Status code: {response.status_code}")
         raise RuntimeError(
             f"Failed to download input. Status code: {response.status_code}"
         )
@@ -75,25 +80,36 @@ def initialize_day(year, day):
     """
     # Create the year folder if it doesn't exist, and the __init__.py file
     year_folder = Path(__file__).parent.parent / str(year)
+    created_year = False
     if not year_folder.exists():
         year_folder.mkdir(parents=True, exist_ok=True)
         init_file = year_folder / "__init__.py"
         if not init_file.exists():
             init_file.touch()  # Create the __init__.py file
-            print(f"Created {init_file}")
+        created_year = True
 
     # Create the day folder
     folder = year_folder / str(day).zfill(2)
-    folder.mkdir(parents=True, exist_ok=True)
+    created_day = False
+    if not folder.exists():
+        folder.mkdir(parents=True, exist_ok=True)
+        created_day = True
 
     # Write TEMPLATE to the day's script file
     script_path = folder / "__main__.py"
+    created_script = False
     if not script_path.exists():
         with open(script_path, "w") as script_file:
             script_file.write(TEMPLATE)
-        print(f"Created script file at {script_path}")
-    else:
-        print(f"Script file already exists at {script_path}")
+        created_script = True
 
     # Download the input file
     load_input(script_path)
+
+    if created_year:
+        print(f"Year folder: {year_folder.relative_to(Path.cwd())}")
+    if created_day:
+        print(f"Day folder: {folder.relative_to(Path.cwd())}")
+    if created_script:
+        print(f"Script template: {script_path.relative_to(Path.cwd())}")
+    print("✅  Initialization complete!")
