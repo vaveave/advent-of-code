@@ -90,7 +90,7 @@ def initialize_day(year, day):
     script_path = folder / "__main__.py"
     if not script_path.exists():
         with open(script_path, "w") as script_file:
-            script_file.write(TEMPLATE.strip())
+            script_file.write(TEMPLATE)
         print(f"Created script file at {script_path}")
     else:
         print(f"Script file already exists at {script_path}")
