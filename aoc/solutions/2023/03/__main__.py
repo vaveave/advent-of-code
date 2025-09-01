@@ -1,4 +1,5 @@
 import re
+from aoc.cli.utils import load_input
 
 
 def isolate_part(row: str, pos: int):
@@ -47,6 +48,10 @@ def get_engine_parts(engine):
     return engine_parts
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     engine_parts = get_engine_parts(input_data.splitlines())
     return sum([int(part[2]) for part in engine_parts])
@@ -58,28 +63,31 @@ def get_engine_gears(engine):
     for i, row in enumerate(engine):
         for j, char in enumerate(row):
             if char == "*":
-                char_candidates = []
                 close_candidates = [
                     item
                     for sublist in parts_candidates[i - 1 : i + 2]
                     for item in sublist
                 ]
-                for candidate in close_candidates:
-                    if abs(candidate[0] - j) <= 1 or abs(candidate[1] - j) <= 1:
-                        char_candidates.append(candidate)
-                if len(char_candidates) == 2:
-                    engine_gears.append(char_candidates)
+                adjacent_parts = [
+                    candidate
+                    for candidate in close_candidates
+                    if abs(candidate[0] - j) <= 1 or abs(candidate[1] - j) <= 1
+                ]
+                if len(adjacent_parts) == 2:
+                    engine_gears.append(adjacent_parts)
     return engine_gears
 
 
 def part_2(input_data):
-    gears = get_engine_gears(input_data.splitlines())
-    return sum([int(gear[0][2]) * int(gear[1][2]) for gear in gears])
+    engine_gears = get_engine_gears(input_data.splitlines())
+    return sum([int(parts[0][2]) * int(parts[1][2]) for parts in engine_gears])
+
+
+def main():
+    data = load_input(__file__)
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
 
 
 if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
-    data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    main()

@@ -1,5 +1,6 @@
 import re
 import math
+from aoc.cli.utils import load_input
 
 
 def process_input(input_str):
@@ -30,6 +31,10 @@ def solve_race(time, distance):
         raise TypeError(
             f"No solutions found for time {str(time)} and total distance {str(distance)}"
         )
+
+
+def read_input(data):
+    return data
 
 
 def part_1(input_data):
@@ -75,9 +80,11 @@ def part_2(input_data):
     return str(count_race_solutions(p[0], p[1]))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

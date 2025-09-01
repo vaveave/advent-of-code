@@ -1,5 +1,7 @@
 import numpy as np
 
+from aoc.cli.utils import load_input
+
 
 pipes = "|-LJ7F"
 move_map = {
@@ -36,6 +38,10 @@ def explore_path(input_str):
     return path
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     path = explore_path(input_data)
     return int(len(path) / 2)
@@ -45,9 +51,11 @@ def part_2(input_data):
     return None
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,3 +1,6 @@
+from aoc.cli.utils import load_input
+
+
 def process_input(input_str):
     return [list(map(int, p.split(" "))) for p in input_str.split("\n")]
 
@@ -13,6 +16,10 @@ def extrapolate_value(values):
     for i in range(len(deltas) - 2, -1, -1):
         deltas[i].append(deltas[i + 1][-1] + deltas[i][-1])
     return deltas[0][-1]
+
+
+def read_input(data):
+    return data
 
 
 def part_1(input_data):
@@ -38,9 +45,11 @@ def part_2(input_data):
     )
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

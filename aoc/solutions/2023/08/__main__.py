@@ -1,4 +1,5 @@
 from math import lcm
+from aoc.cli.utils import load_input
 
 
 decode_instr = {"L": 0, "R": 1}
@@ -47,6 +48,10 @@ def follow_the_ghosts_path_mr_camel(input_str):
     return lcm(*path_lengths)
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     return follow_the_path_mr_camel(input_data)
 
@@ -55,9 +60,11 @@ def part_2(input_data):
     return follow_the_ghosts_path_mr_camel(input_data)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

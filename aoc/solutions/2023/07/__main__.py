@@ -1,4 +1,5 @@
 from enum import Enum
+from aoc.cli.utils import load_input
 
 
 def process_input(input_str):
@@ -93,6 +94,10 @@ def sort_hands(hands):
     return sorted_hands
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     hands = [Hand.from_string(str_) for str_ in input_data.splitlines()]
     sorted_hands = sort_hands(hands)
@@ -107,9 +112,11 @@ def part_2(input_data):
     return str(sum([(i + 1) * hand.bid for i, hand in enumerate(sorted_hands)]))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,4 +1,6 @@
-# Define a dictionary mapping string literals to digits
+from aoc.cli.utils import load_input
+
+
 literals_to_digits = {
     "one": "1",
     "two": "2",
@@ -45,6 +47,10 @@ def calib_from_string_with_replacement(str_):
     return first_str_digit(str_) + last_str_digit(str_)
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     calibration_values = [
         int(calib_from_string(line_)) for line_ in input_data.splitlines()
@@ -60,9 +66,11 @@ def part_2(input_data):
     return str(sum(calibration_values))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

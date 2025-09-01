@@ -1,5 +1,7 @@
 import re
 
+from aoc.cli.utils import load_input
+
 
 def process_card(card_str):
     card_str_no_multi_spaces = re.sub(r"\s+", " ", card_str)
@@ -39,6 +41,10 @@ def count_all_points(input_str):
     )
 
 
+def read_input(data):
+    return data
+
+
 def part_1(input_data):
     return count_all_points(input_data)
 
@@ -56,9 +62,11 @@ def part_2(input_data):
     return count_all_scratchcards(input_data)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

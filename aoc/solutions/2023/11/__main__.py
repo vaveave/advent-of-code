@@ -1,6 +1,8 @@
 import numpy as np
 import itertools
 
+from aoc.cli.utils import load_input
+
 
 space = "."
 galaxy = "#"
@@ -36,6 +38,10 @@ def shortest_path_between_galaxies(input_str):
             for gal_1, gal_2 in galaxies_pairs
         ]
     )
+
+
+def read_input(data):
+    return data
 
 
 def part_1(input_data):
@@ -74,9 +80,11 @@ def part_2(input_data):
     return shortest_path_between_galaxies_n_times(input_data, 1000000)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

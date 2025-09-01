@@ -1,5 +1,7 @@
 import re
 
+from aoc.cli.utils import load_input
+
 
 color_max_cnt = {"green": 13, "blue": 14, "red": 12}
 
@@ -22,6 +24,10 @@ def is_game_valid(game_results):
         else:
             colour_count[color] = max(colour_count[color], color_cnt)
     return True
+
+
+def read_input(data):
+    return data
 
 
 def part_1(input_data):
@@ -57,9 +63,11 @@ def part_2(input_data):
     return result
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()
