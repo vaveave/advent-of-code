@@ -1,5 +1,11 @@
 import re
 
+from aoc.cli.utils import load_input
+
+
+def read_input(data):
+    return data
+
 
 def is_abba(segment):
     if (
@@ -42,30 +48,29 @@ def support_tls(ip):
     return False
 
 
+def part_1(data):
+    return sum(support_tls(ip) for ip in data.splitlines())
+
+
 def support_ssl(ip):
     supernets, hypernets = split_ip_components(ip)
-    for supernet in supernets:
-        for i in range(3, len(supernet) + 1):
-            segment = supernet[i - 3 : i]
-            if is_aba(segment):
-                if any(is_bab(segment, hypernet) for hypernet in hypernets):
-                    return True
+    abas = [net[i:i+3] for net in supernets for i in range(len(net)-2) if is_aba(net[i:i+3])]
+    for aba in abas:
+        for hypernet in hypernets:
+            if is_bab(aba, hypernet):
+                return True
     return False
 
 
-def part_1(input_data):
-    input_data = input_data.splitlines()
-    return sum(1 for ip in input_data if support_tls(ip))
+def part_2(data):
+    return sum(support_ssl(ip) for ip in data.splitlines())
 
 
-def part_2(input_data):
-    input_data = input_data.splitlines()
-    return sum(1 for ip in input_data if support_ssl(ip))
+def main():
+    data = load_input(__file__)
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
 
 
 if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
-    data = load_input(__file__)
-    print("Part 1:", part_1(data))
-    print("Part 2:", part_2(data))
+    main()

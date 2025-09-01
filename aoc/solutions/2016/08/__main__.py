@@ -1,6 +1,12 @@
 import re
 import numpy as np
 
+from aoc.cli.utils import load_input
+
+
+def read_input(data):
+    return data
+
 
 def parse_operation(instruction):
     patterns = {
@@ -14,20 +20,17 @@ def parse_operation(instruction):
     raise ValueError(f"Instruction not recognized: {instruction}")
 
 
-def apply_operations(input_data, keypad_shape):
-    operations = [parse_operation(line) for line in input_data.splitlines()]
+def apply_operations(data, keypad_shape):
+    operations = [parse_operation(line) for line in data.splitlines()]
     keypad_matrix = np.zeros(keypad_shape, int)
     for operation in operations:
         key, (x, y) = operation
         match key:
             case 0:
-                # rect
                 keypad_matrix[:y, :x] = 1
             case 1:
-                # roll row
                 keypad_matrix[x, :] = np.roll(keypad_matrix[x, :], shift=y)
             case 2:
-                # roll column
                 keypad_matrix[:, x] = np.roll(keypad_matrix[:, x], shift=y)
     return keypad_matrix
 
@@ -37,20 +40,20 @@ def display_keypad(keypad_matrix):
     return "\n" + "\n".join(" ".join(row) for row in keypad_display)
 
 
-input_test = """rect 3x2
-rotate column x=1 by 1
-rotate row y=0 by 4
-rotate column x=1 by 1
-"""
-shape_test = (3, 7)
+def part_1(data):
+    keypad_matrix = apply_operations(data, (6, 50))
+    return int(np.sum(keypad_matrix))
+
+def part_2(data):
+    keypad_matrix = apply_operations(data, (6, 50))
+    return display_keypad(keypad_matrix)
+
+
+def main():
+    data = load_input(__file__)
+    print("Part 1:", part_1(read_input(data)))
+    print("Part 2:", part_2(read_input(data)))
+
 
 if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
-    data = load_input(__file__)
-
-    shape = (6, 50)
-    keypad = apply_operations(data, shape)
-
-    print("Part 1:", np.sum(np.sum(keypad)))
-    print("Part 2:", display_keypad(keypad))
+    main()
