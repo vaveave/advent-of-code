@@ -74,7 +74,7 @@ def move_boxes(input_data):
 
 
 if __name__ == "__main__":
-    from aoc.initialize_day import load_input
+    from aoc.cli import load_input
 
     data = load_input(__file__)
     print("Part 1:", move_boxes(parse_input(data)))

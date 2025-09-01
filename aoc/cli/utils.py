@@ -2,7 +2,7 @@ import os
 import requests
 from pathlib import Path
 
-from aoc.initialize_day.day_template import TEMPLATE
+from aoc.cli.template import TEMPLATE
 
 
 def _get_session_token():
@@ -79,7 +79,7 @@ def initialize_day(year, day):
         day (int): The day of the Advent of Code challenge.
     """
     # Create the year folder if it doesn't exist, and the __init__.py file
-    year_folder = Path(__file__).parent.parent / str(year)
+    year_folder = Path(__file__).parent.parent / "solutions" / str(year)
     created_year = False
     if not year_folder.exists():
         year_folder.mkdir(parents=True, exist_ok=True)
