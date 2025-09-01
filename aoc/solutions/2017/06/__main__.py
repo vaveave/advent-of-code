@@ -1,11 +1,13 @@
 from math import ceil
 
+from aoc.cli.utils import load_input
+
 
 def read_input(input_data):
     return [int(line) for line in input_data.split("\t")]
 
 
-def redistribute_blocks(memory_banks: list[int]) -> tuple[int, int]:
+def redistribute_blocks(memory_banks):
     num_banks = len(memory_banks)
     cycle_count = 0
     seen_configs = {}
@@ -26,10 +28,22 @@ def redistribute_blocks(memory_banks: list[int]) -> tuple[int, int]:
     return cycle_count, cycle_count - seen_configs[tuple(memory_banks)] + 1
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
+def part_1(data):
+    total_cycles, _ = redistribute_blocks(data.copy())
+    return total_cycles
 
+
+def part_2(data):
+    _, loop_size = redistribute_blocks(data.copy())
+    return loop_size
+
+
+def main():
     data = load_input(__file__)
-    total_cycles, loop_size = redistribute_blocks(read_input(data))
-    print("Part 1:", total_cycles)
-    print("Part 2:", loop_size)
+    parsed = read_input(data)
+    print("Part 1:", part_1(parsed))
+    print("Part 2:", part_2(parsed))
+
+
+if __name__ == "__main__":
+    main()

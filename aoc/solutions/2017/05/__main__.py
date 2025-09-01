@@ -1,8 +1,11 @@
+from aoc.cli.utils import load_input
+
+
 def read_input(input_data):
     return [int(line) for line in input_data.splitlines()]
 
 
-def move_pointer(instructions: list[int], jump_cap: int | None = None) -> int:
+def move_pointer(instructions, jump_cap=None):
     cnt = 0
     curr_pos = 0
     length = len(instructions)
@@ -17,17 +20,19 @@ def move_pointer(instructions: list[int], jump_cap: int | None = None) -> int:
     return cnt
 
 
-def part_1(input_data):
-    return move_pointer(input_data)
+def part_1(data):
+    return move_pointer(data)
 
 
-def part_2(input_data):
-    return move_pointer(input_data, 3)
+def part_2(data):
+    return move_pointer(data, 3)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()
