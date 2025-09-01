@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from io import StringIO
 
+from aoc.cli.utils import load_input
+
 
 # Define the shape of the matrix
 grid_shape = (1000, 1000)
@@ -71,9 +73,11 @@ def part_2(input_data):
     return np.sum(grid_light)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,3 +1,6 @@
+from aoc.cli.utils import load_input
+
+
 def contains_3_vowels(str_: str):
     vowels = ["a", "e", "i", "o", "u"]
     vowels_counter = 0
@@ -62,9 +65,11 @@ def part_2(input_data):
     return str(sum([is_nice_pt2(str_) for str_ in input_data.splitlines()]))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

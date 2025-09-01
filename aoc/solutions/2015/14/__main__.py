@@ -1,6 +1,8 @@
 import re
 import numpy as np
 
+from aoc.cli.utils import load_input
+
 
 def read_input(input_data):
     pattern = re.compile(r"\d+")
@@ -35,9 +37,11 @@ def part_2(reindeer_stats, total_time):
     return np.max(np.sum(distances == max_distances, axis=0))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data), 2503))
     print("Part 2:", part_2(read_input(data), 2503))
+
+
+if __name__ == "__main__":
+    main()

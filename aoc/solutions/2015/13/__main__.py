@@ -1,6 +1,8 @@
 import re
 import itertools
 
+from aoc.cli.utils import load_input
+
 
 def read_input(input_data):
     pattern = re.compile(
@@ -52,9 +54,11 @@ def part_2(input_data):
     return part_1(input_data, neutral_guest=True)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(read_input(data)))
     print("Part 2:", part_2(read_input(data)))
+
+
+if __name__ == "__main__":
+    main()

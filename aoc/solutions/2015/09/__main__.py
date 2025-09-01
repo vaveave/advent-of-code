@@ -1,5 +1,7 @@
 from itertools import permutations
 
+from aoc.cli.utils import load_input
+
 
 def process_input(input_data):
     rows = input_data.splitlines()
@@ -43,9 +45,11 @@ def part_2(input_data):
     return str(paths[max(paths, key=paths.get)])
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

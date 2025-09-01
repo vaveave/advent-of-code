@@ -1,3 +1,6 @@
+from aoc.cli.utils import load_input
+
+
 def map_instruction(move):
     match move:
         case "^":
@@ -31,9 +34,11 @@ def part_2(input_data):
     return str(set(santa_path).union(set(robo_santa_path)).__len__())
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

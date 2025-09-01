@@ -1,5 +1,7 @@
 import hashlib
 
+from aoc.cli.utils import load_input
+
 
 def mine_adventcoin(secret_key, n_zeros):
     number = 1
@@ -19,9 +21,11 @@ def part_2(input_data):
     return str(mine_adventcoin(input_data, 6))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

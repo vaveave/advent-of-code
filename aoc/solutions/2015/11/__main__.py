@@ -1,5 +1,7 @@
 import string
 
+from aoc.cli.utils import load_input
+
 
 alphabet = string.ascii_lowercase
 
@@ -57,13 +59,13 @@ def part_1(password):
     return password
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
-
     test_validate_psw()
-
     next_santa_password = part_1(data)
     print("Part 1:", next_santa_password)
     print("Part 2:", part_1(next_santa_password))
+
+
+if __name__ == "__main__":
+    main()

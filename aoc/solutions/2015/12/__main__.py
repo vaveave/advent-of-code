@@ -1,6 +1,8 @@
 import re
 import json
 
+from aoc.cli.utils import load_input
+
 
 def part_1(input_data):
     pattern = re.compile(r"[-+]?[0-9]+")
@@ -28,9 +30,11 @@ def part_2(input_data):
     return sum_excluding_reds(input_data)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

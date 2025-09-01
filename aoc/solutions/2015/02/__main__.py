@@ -1,3 +1,6 @@
+from aoc.cli.utils import load_input
+
+
 def part_1(input_data):
     input_per_row = input_data.split("\n")
     surf = 0
@@ -22,9 +25,11 @@ def part_2(input_data):
     return str(ribbon)
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,9 @@
 from contextlib import redirect_stdout
 from io import StringIO
 
+from aoc.cli.utils import load_input
+
+
 # Create a StringIO object to capture the output
 output_buffer = StringIO()
 
@@ -34,9 +37,11 @@ def part_2(input_data):
     return compute_extra_chars_num(input_list_with_replacements(input_data))
 
 
-if __name__ == "__main__":
-    from aoc.initialize_day import load_input
-
+def main():
     data = load_input(__file__)
     print("Part 1:", part_1(data))
     print("Part 2:", part_2(data))
+
+
+if __name__ == "__main__":
+    main()
