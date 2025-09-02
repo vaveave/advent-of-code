@@ -5,7 +5,9 @@ Utility script to clean up cache folders in the Advent of Code project.
 from pathlib import Path
 import shutil
 
+
 CACHE_DIRS = [".idea", ".mypy_cache", "__pycache__"]
+
 
 def cleanup_cache_folders(root_dir: Path):
     """
@@ -19,6 +21,7 @@ def cleanup_cache_folders(root_dir: Path):
                 print(f"Removed: {subdir}")
             except Exception as e:
                 print(f"Error removing {subdir}: {e}")
+
 
 if __name__ == "__main__":
     import sys
