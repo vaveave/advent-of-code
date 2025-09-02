@@ -19,63 +19,38 @@ setx ADVENT_OF_CODE_SESSION_ID "your_session_token_here"
 export ADVENT_OF_CODE_SESSION_ID="your_session_token_here"
 ```
 
-### 2. Set Up the Environment
+### 2. Run the Solution for Any Day
 
-This project uses `pyproject.toml` for managing dependencies and environment setup. To get started, make sure you have **[Poetry](https://python-poetry.org/)** installed, as it helps manage Python packages and virtual environments.
 
-If you don’t have Poetry installed, you can install it by running:
-
-#### For macOS/Linux/Windows:
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
-
-Once Poetry is installed, you can create and activate the virtual environment with the following command:
+After setting your virtual environment, you can use a single command to run any day's solution:
 
 ```bash
-poetry install
-```
-
-This will install all the necessary dependencies defined in `pyproject.toml` and create a virtual environment for you.
-
-To activate the virtual environment, run:
-
-```bash
-poetry shell
-```
-
-### 3. Run the Solution for Any Day
-
-
-You can use a single command to run any day's solution:
-
-```bash
-py -m aoc <year> <day>
+py -m aoc run <year> <day>
 ```
 
 For example, to run Day 1 of 2023:
 
 ```bash
-py -m aoc 2023 1
+py -m aoc run 2023 1
 ```
 
-### 4. (Optional) Day Initialization
-To create the folder structure and script template for a specific day automatically, use the `-init` flag:
+### 3. (Optional) Day Initialization
+To create the folder structure and script template for a specific day automatically, use the `init` command instead:
 
 ```bash
-py -m aoc <year> <day> -init
+py -m aoc init <year> <day>
 ```
 
 For example, to initialize Day 1 of 2023:
 
 ```bash
-py -m aoc 2023 1 -init
+py -m aoc init 2023 1
 ```
 
 #### What If the Input File Is Missing?
 If the input file for the day is missing when running the script, it will attempt to download it automatically using your session token.
 
-### 5. Happy Coding!
+### 4. Happy Coding!
 
 That’s it! Now you can enjoy solving the puzzles. 🎉 If you want to try a different year or day, just run the corresponding script with `py`.
 
