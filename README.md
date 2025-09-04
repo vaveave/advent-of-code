@@ -1,11 +1,10 @@
-
-# Advent of Code Solutions
+# Advent of Code solutions
 
 Welcome to my small **[Advent of Code](https://adventofcode.com/)** corner! 🎄🎮 This repository contains my solutions to the Advent of Code challenges, with one Python script for each day of the challenge. The input data for each day is automatically downloaded using a session token, so all you need to do is run the scripts!
 
-## Setup Instructions
+## Setup instructions
 
-### 1. Set Up Your Session Token
+### 1. Set up your session token
 
 To download the input data, you'll need to authenticate by setting the `ADVENT_OF_CODE_SESSION_ID` environment variable.
 
@@ -19,40 +18,47 @@ setx ADVENT_OF_CODE_SESSION_ID "your_session_token_here"
 export ADVENT_OF_CODE_SESSION_ID="your_session_token_here"
 ```
 
-### 2. Run the Solution for Any Day
+### 2. Install and use uv for dependency management
 
+This project uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) for dependency management and running solutions.  
+Follow the [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/) to install `uv` on your system.
 
-After setting your virtual environment, you can use a single command to run any day's solution:
+You do **not** need to manually configure a Python environment—`uv` handles everything for you!
+
+### 3. Run the solution for any day
+
+From the project root (where `pyproject.toml` is located), simply run:
 
 ```bash
-py -m aoc run <year> <day>
+uv run aoc run <year> <day>
 ```
 
 For example, to run Day 1 of 2023:
 
 ```bash
-py -m aoc run 2023 1
+uv run aoc run 2023 1
 ```
 
-### 3. (Optional) Day Initialization
-To create the folder structure and script template for a specific day automatically, use the `init` command instead:
+### 4. (Optional) Day initialization
+
+To create the folder structure and script template for a specific day automatically, use the `init` command:
 
 ```bash
-py -m aoc init <year> <day>
+uv run aoc init <year> <day>
 ```
 
 For example, to initialize Day 1 of 2023:
 
 ```bash
-py -m aoc init 2023 1
+uv run aoc init 2023 1
 ```
 
-#### What If the Input File Is Missing?
+#### What if the input file is missing?
 If the input file for the day is missing when running the script, it will attempt to download it automatically using your session token.
 
-### 4. Happy Coding!
+### 5. Happy coding!
 
-That’s it! Now you can enjoy solving the puzzles. 🎉 If you want to try a different year or day, just run the corresponding script with `py`.
+That’s it! Now you can enjoy solving the puzzles. 🎉
 
 ---
 
