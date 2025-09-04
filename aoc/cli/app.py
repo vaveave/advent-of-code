@@ -1,5 +1,15 @@
+import sys
 import argparse
 import importlib
+from typing import Literal, Annotated
+from pydantic import BaseModel, Field, ValidationError
+
+
+class CLIArgs(BaseModel):
+    command: Literal["run", "init"]
+    year: Annotated[int, Field(strict=True, gt=2014, le=2100)]
+    day: Annotated[int, Field(strict=True, gt=0, le=25)]
+
 
 def run_solution(year: int, day: int):
     """Run the solution script for the given year and day."""
@@ -18,7 +28,7 @@ def init_day(year: int, day: int):
     initialize_day(year, day)
 
 
-def build_parser():
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run or initialize Advent of Code solutions.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -36,12 +46,20 @@ def build_parser():
 
 
 def main():
-    args = build_parser().parse_args()
+    parser = build_parser()
+    args = parser.parse_args()
 
-    if args.command == "run":
-        run_solution(args.year, args.day)
-    elif args.command == "init":
-        init_day(args.year, args.day)
-    else:
-        print(f"❌ Unknown command '{args.command}'")
+    try:
+        cli_args = CLIArgs(**vars(args))
+    except ValidationError as e:
+        print("❌ Invalid arguments:\n", e)
+        sys.exit(1)
 
+    if cli_args.command == "run":
+        run_solution(cli_args.year, cli_args.day)
+    elif cli_args.command == "init":
+        init_day(cli_args.year, cli_args.day)
+
+
+if __name__ == "__main__":
+    main()
