@@ -3,12 +3,12 @@ from itertools import product
 from aoc.cli.utils import load_input
 
 
-def read_input(data):
+def read_input(data: str) -> list[int]:
     return [int(i) for i in data.split(",")]
 
 
-def part_1(data, noun=12, verb=2):
-    curr_pos = 0
+def part_1(data: list[int], noun: int = 12, verb: int = 2) -> int:
+    curr_pos: int = 0
     data[1] = noun
     data[2] = verb
     opp_code, pos_param_1, pos_param_2, pos_result = data[curr_pos: curr_pos + 4]
@@ -23,7 +23,7 @@ def part_1(data, noun=12, verb=2):
     return data[0]
 
 
-def part_2(data):
+def part_2(data: list[int]) -> int:
     for noun, verb in product(range(100), range(100)):
         if part_1(data.copy(), noun, verb) == 19690720:
             return 100 * noun + verb
@@ -31,8 +31,9 @@ def part_2(data):
 
 def main():
     data = load_input(__file__)
-    print("Part 1:", part_1(read_input(data)))
-    print("Part 2:", part_2(read_input(data)))
+    program = read_input(data)
+    print("Part 1:", part_1(program))
+    print("Part 2:", part_2(program))
 
 
 if __name__ == "__main__":
